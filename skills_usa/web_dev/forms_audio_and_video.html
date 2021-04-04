@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Audio, Video, and Forms</title>
+    </head>
+    <body>
+        <header>
+            <h1>Audio, Video, and Form practice</h1>
+        </header>
+        <form action="thankyou.html">
+            <fieldset>
+                <legend>Contact Us</legend>
+                <input type="text" title="Enter your name:"
+                placeholder="Enter your name..." 
+                required
+                />
+                <input type="email" 
+                placeholder="Enter your email..."
+                />
+                <input type="color" />
+                    <button>Submit</button>
+            </fieldset>
+        </form>
+        <label for="file">Downloading progress:</label>
+        <progress id="file" value="32" max="100"> 32% </progress>
+        <video width="320" height="240" autoplay>
+            <source src="movie.ogg" type="video/ogg" />
+            <source src="movie.mp4" type="video.mp4" />
+            your browser does not support this video tag
+        </video>
+        <br />
+        <br />
+        <hr />
+        <table border="1">
+            <thead>
+                Header 1
+            </thead>
+            <tr>
+                <td>
+                    This is table data
+                </td>
+                <td>
+                    Table data 2
+                </td>
+                <br />
+                <br />
+                <td colspan="2" > this should expand</td>
+            </tr>
+        </table>
+    </body>
+</html>

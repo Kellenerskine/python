@@ -1,0 +1,16 @@
+h3 {
+    color: goldenrod;
+    background-color: firebrick;
+    width: fit-content;
+}
+img {
+    border: 10px solid coral;
+}
+h2 {
+    color: coral;
+    background-color: cyan;
+    width: fit-content;
+}
+body {
+    background-color: darkgrey;
+}

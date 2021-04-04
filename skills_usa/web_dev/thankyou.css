@@ -1,0 +1,11 @@
+body {
+    background-image: url("https://images.wallpaperscraft.com/image/salute_fireworks_celebration_124859_1920x1080.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+h1 {
+    color: darkmagenta;
+    background-color: darkkhaki;
+    width: fit-content;
+    text-align: center;
+}
