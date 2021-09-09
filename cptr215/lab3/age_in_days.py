@@ -1,0 +1,7 @@
+yob = input("Enter the year you were born (4 digits, i.e., 1998): ")
+print()
+print("You entered: " + yob)
+age = 2021 - int(yob)
+print("On your birthday this year, you'll be {} years old.".format(str(age)))
+age_in_days = (age * 365.24)
+print("You'll have lived {}±1 days.".format(round(age_in_days)))
