@@ -14,7 +14,7 @@ def day_of_week_num(year, month, day):
         year -= 1
 
     q = day
-    m = month  # account for jan and feb
+    m = month
     k = year % 100
     j = year // 100
     h = q + 13 * (m + 1) // 5 + k + k // 4 + j // 4 + 5 * j
@@ -50,21 +50,25 @@ print(day_of_week_word(num_of_day))
 #     >>>dayOfWeekForDate(2002, 6, 7)
 #     6
 #     """
-#     if month == 1:
-#         month = 13
-#         year = year - 1
 #
-#     if month == 2:
-#         month = 14
-#         year = year - 1
+#     if year == 1752 and month == 9 and day == 30:
+#         return 7
+#     else:
+#         if month == 1:
+#             month = 13
+#             year = year - 1
 #
-#     q = day
-#     m = month  # account for jan and feb
-#     k = year % 100
-#     j = year // 100
-#     h = q + 13 * (m + 1) // 5 + k + k // 4 + j // 4 + 5 * j
-#     result = (h % 7)
-#     return result
+#         if month == 2:
+#             month = 14
+#             year = year - 1
+#
+#         q = day
+#         m = month  # account for jan and feb
+#         k = year % 100
+#         j = year // 100
+#         h = q + 13 * (m + 1) // 5 + k + k // 4 + j // 4 + 5 * j
+#         result = (h % 7)
+#         return result
 #
 #
 # def nameForDayOfWeekNumber(dayNumber):
@@ -79,10 +83,10 @@ print(day_of_week_word(num_of_day))
 #         4: "Wednesday",
 #         5: "Thursday",
 #         6: "Friday",
-#         7: "Saturday"
+#         7: "Sabbath"
 #     }
 #
-#     day_of_week = day_name_dict[day_num]
+#     day_of_week = day_name_dict[dayNumber]
 #     return day_of_week
 #
 #
