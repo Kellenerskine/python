@@ -9,6 +9,6 @@ for i in range(1, n):
     if (i % 3) == 0:
         print(" Indians;")
     else:
-        print(", ", end="")
+        print(",", end="")
 
 print("{} little Indian boys.".format(n))
