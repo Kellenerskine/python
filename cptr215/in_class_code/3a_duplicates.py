@@ -5,8 +5,16 @@ Prof O and CPTR-215
 
 
 def get_numbers():
-    return [2, 4, 6, 8, 7, 5, 9]
-
+    """Asks user to enter numbers until they enter STOP.
+    Returns a list that contains all the numbers.
+    >>>
+    """
+    while True:
+        user_input = input("Enter a number (STOP when done): ")
+        if user_input == "STOP":
+            return numbers
+        else:
+            numbers.append(float(user_input))
 
 def has_duplicates(items):
     """Determines whether numbers contains any duplicates.
@@ -14,11 +22,20 @@ def has_duplicates(items):
     True
     >>> has_duplicates([1])
     False
+    >>> has_duplicates([])
+    False
+    >>> has_duplicates([6, 6, 6, 6, 6, 6])
+    True
     """
     for i in range(len(numbers)):
-        if numbers[i] in numbers[i:]:
-            return
+        if numbers[i] in numbers[i+1:]:
+            return True
+    return False
 
+
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
 
 #  get list of nums from user until 'STOP'
 numbers = get_numbers()
