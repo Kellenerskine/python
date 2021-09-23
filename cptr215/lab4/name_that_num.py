@@ -15,105 +15,56 @@
 #
 #
 # print(number_to_words(10))
-#
-#
-#
 
 
-def integer_to_english(number):
-    if number>=1 and number<=1000:
-        a = ['','one','two','three','four','five','six','seven','eight','nine','ten','eleven','twelve','thirteen','fourteen','fifteen',
-             'sixteen','seventeen','eighteen','nineteen','twenty ','thirty ','fourty ','fifty ','sixty ','seventy ','eighty ','ninty ']
-        if number<=20:
-            if number%10==0: return a[number]
-            else: return a[number]
-        elif number<100:
-            b=number-20
-            r=b%10
-            b//=10
-            return a[20+b]+a[r]
-        elif number<1000:
-            if number%100==0:
-                b=number//100
-                return a[b]+' hundred'
-            else:
-                r=number%100
-                b=number//100
-                if r<=20:
-                    return a[b]+' hundred'+' and '+a[r]
+def words_from_number(number):
+    # """This function should take a number and return the number in english.
+    # >>> words_from_number(500)
+    # 'five hundred'
+    # >>> words_from_number(657)
+    # 'six hundred and fifty seven'
+    # """
+    if 1 <= number <= 1000:  # TODO expand this to proper scope, as well as expand the num_names list
+        num_names = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven',
+                     'twelve', 'thirteen', 'fourteen', 'fifteen',
+                     'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty ', 'thirty ', 'forty ', 'fifty ',
+                     'sixty ', 'seventy ', 'eighty ', 'ninety ']
+        if number <= 20:
+            return num_names[number]
+        elif number < 100:  # TODO fix logic here
+            b = number - 20
+            r = b % 10
+            b //= 10
+            return num_names[20 + b + num_names[r]]
+        elif number < 1000:
+            if number % 100 == 0:  # if the num is an even hundred ie. 900
+                b = number // 100
+                return num_names[b] + ' hundred'
+            else:  # if the number is not an even hundred ie. 980
+                r = number % 100  # get back two nums
+                b = number // 100  # get front num ie 980 % 100 = 9
+                if r <= 20:
+                    return num_names[b] + ' hundred' + ' and ' + num_names[r]
                 else:
-                    r=r-20
-                    d=r//10
-                    r%=10
-                    return a[b]+' hundred'+' and '+a[20+d]+a[r]
-        elif number==1000:
+                    r = r - 20
+                    d = r // 10
+                    r %= 10
+                    return num_names[b] + ' hundred' + ' and ' + num_names[20 + d] + num_names[r]
+        elif number == 1000:
             return 'one thousand'
+        # elif: #TODO implement logic for numbers over 1000
+        #     pass
+        #     return 89
         else:
             return -1
-
-number=789
-print(integer_to_english(number))
-
+    else:
+        return 'zero'
 
 
+if __name__ == "__main__":
+    import doctest
 
+    doctest.testmod()
+    number_input = input("enter a num: ")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def words_from_number(number):  # converts a number to words
-#     num_name_dict = {
-#         1: "one",
-#         2: "two",
-#         3: "three",
-#         4: "four",
-#         5: "five",
-#         6: "six",
-#         7: "seven",
-#         8: "eight",
-#         9: "nine"
-#     }
-#     num_as_str = str(number)
-#     for num in num_as_str:
-#         for key in num_name_dict:
-#             if num == key:
-#                 print(num_name_dict[key])
-#     # take the right-most numbers
-#
-#     return num_as_str
-#
-#
-# user_number = int(input())
-# word_output = words_from_number(user_number)
-# # print(word_output)
+    print(words_from_number(int(number_input)))
