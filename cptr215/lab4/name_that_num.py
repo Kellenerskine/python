@@ -4,19 +4,6 @@
 # Spell everything correctly, and use correct punctuation (hyphens for forty-five and thirty-seven, no commas or plurals).
 # You may only use built-in Python functions, not any modules or third-party libraries!'
 
-# words = ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"]
-#
-# def number_to_words(number):
-#     if number - 11 >= 0:
-#         pass
-#     else:
-#         for i in str(number):
-#             return "".join(words[int(i)])
-#
-#
-# print(number_to_words(10))
-
-
 def words_from_number(number):
     # """This function should take a number and return the number in english.
     # >>> words_from_number(500)
@@ -24,11 +11,11 @@ def words_from_number(number):
     # >>> words_from_number(657)
     # 'six hundred and fifty seven'
     # """
-    if 1 <= number <= 1000:  # TODO expand this to proper scope, as well as expand the num_names list
+    if 1 <= number <= 100000000000000000000:  # TODO expand this to proper scope, as well as expand the num_names list
         num_names = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven',
                      'twelve', 'thirteen', 'fourteen', 'fifteen',
-                     'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty ', 'thirty ', 'forty ', 'fifty ',
-                     'sixty ', 'seventy ', 'eighty ', 'ninety ']
+                     'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty', 'thirty', 'forty', 'fifty',
+                     'sixty', 'seventy', 'eighty', 'ninety', 'thousand ', 'million ', 'billion ', ]
         if number <= 20:
             return num_names[number]
         elif number < 100:  # TODO fix logic here
@@ -52,9 +39,46 @@ def words_from_number(number):
                     return num_names[b] + ' hundred' + ' and ' + num_names[20 + d] + num_names[r]
         elif number == 1000:
             return 'one thousand'
-        # elif: #TODO implement logic for numbers over 1000
-        #     pass
-        #     return 89
+
+        # TODO implement logic for numbers over 1000
+
+        elif number < 10000:  # if the number is less than 10 thousand
+            if number % 1000 == 0:
+                b = number // 1000
+                return num_names[b] + ' thousand'
+            else:
+                r = number % 1000  # back 3 nums
+                b = number // 1000  # front num
+                if r <= 20:
+                    return num_names[b] + ' thousand' + ' ' + num_names[r] + ' hundred'
+                else:
+                    r -= 20
+                    d = r // 100
+                    r %= 10
+                    c = number % 10
+                    return num_names[b] + ' thousand' + ' ' + num_names[d] + ' hundred and ' + num_names[(((number-(b*1000))-(d*100))//10) + 18] + '-' + num_names[c]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         else:
             return -1
     else:
