@@ -15,25 +15,27 @@ def wordsFromNumber(number):
     groups_of_three = len(num_strings)
 
     counter = groups_of_three - 1
+    pos = 0
 
     for string in num_strings:
         for num in string:
+            pos += 1
             last_two_nums = int(string) % 100
             if num == string[0] and num != 0:
                 result = (result + " " + ones[int(num)] + " ")
                 if ((counter != len(num_strings)) or len(num_strings) == 1) and (num == string[0]):
                     result += "hundred "
-            elif num == string[2]:
-                result = (result + " " + ones[int(num)] + " ")
-                if ((counter != len(num_strings)) or len(num_strings) == 1) and (num == string[0]):
-                    result += "hundred "
+            # elif pos == 3 and num != 0:
+            #     result = (result + " " + ones[int(num)] + " ")
+            #     if ((counter != len(num_strings)) or len(num_strings) == 1) and (num == string[0]):
+            #         result += "hundred "
 
             else:
                 # last_two_nums = int(string) % 100
                 if 20 > last_two_nums > 9:
                     result = result + tens[int(num)]
                 elif last_two_nums < 10:
-                    result = result + ones[int(num)]
+                    result = result + "and" + ones[int(num)]
                 else:
                     result = result + hundreds[int(num) - 1]
         result += suffixes[counter]
