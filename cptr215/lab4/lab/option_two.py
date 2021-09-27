@@ -20,6 +20,7 @@ def wordsFromNumber(number):
     counter = groups_of_three - 1
     pos = 0
     is_a_teen = 0
+    hiphen = 0  # means the words have no hiphens
 
     for string in num_strings:
         for num in string:
@@ -60,11 +61,14 @@ def wordsFromNumber(number):
                     result = result + ones[int(num)]
                 else:
                     result = result + hundreds[int(num) - 1]
+                    if (last_two_nums % 10) != 0:  # determines if a hyphen is needed
+                        result += "-"
+                        hiphen += 1  # means the word has a hyphen
             if pos == 3 and num != 0 and is_a_teen != 1:
                 result = (result + ones[int(num)])
                 if ((counter != len(num_strings)) or len(num_strings) == 1) and (pos == 1):
                     result += " hundred "
-            result += " "
+            # result += " "
         result += " " + suffixes[counter] + " "
         counter -= 1
 
@@ -72,8 +76,9 @@ def wordsFromNumber(number):
     result = ""
     for i in range(len(result_strings)):
         result += result_strings[i]
-        if i != (len(result_strings)-1):
+        if (i != (len(result_strings) - 1)): #and (hiphen == 0)
             result += " "
+
 
     return result
 
