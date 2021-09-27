@@ -27,14 +27,17 @@ class Date:
         else:
             m = self.month
             y = self.year
-        dow = self.day + (13 * (m + 1) / 5 // 5 + y + y // 4 - y // 100 + y // 400) % 7
-
+        dow = (self.day + (13 * (m + 1) / 5 // 5 + y + y // 4 - y // 100 + y // 400) % 7)
+# i wrote the above zeller form wrong, program therefore does not work.
         return 7 if dow == 0 else dow
 
     def print(self):
         """Outputs self in MMM d, yyy format.
         >>> Date(2021, 9, 27)
-        "Sep 27, 2021"
+        Sep 27, 2021
+        >>> independence = Date(1776, 7, 4)
+        >>> independence.print()
+        Jul 4, 1776
         """
         month_name = "not Jan Feb Mar Apr May Jun Aug Sep Oct Nov Dec".split()[self.month]
         print(f"{month_name} {self.day}, {self.year}")
