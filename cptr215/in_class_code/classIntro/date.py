@@ -56,17 +56,17 @@ class Date:
         return f"Date({self.year}, {self.month}, {self.day})"
 
     def is_leap_year(self):
-    """determines whether self is in a leap year
-    >>> Date(2021, 9, 29).is_leap_year()
-    False
-    >>> Date(1984, 4, 27).is_leap_year()
-    True
-    >>> Date(2000, 1, 1).is_leap_year()
-    True
-    >>> Date(1900, 11, 30).is_leap_year()
-    False
-    """
-    return self.year %
+        """determines whether self is in a leap year
+        >>> Date(2021, 9, 29).is_leap_year()
+        False
+        >>> Date(1984, 4, 27).is_leap_year()
+        True
+        >>> Date(2000, 1, 1).is_leap_year()
+        True
+        >>> Date(1900, 11, 30).is_leap_year()
+        False
+        """
+        return self.year % 400 == 0 or (self.year % 4 == 0 and self.year % 100 != 0)
 
 
 if __name__ == '__main__':
