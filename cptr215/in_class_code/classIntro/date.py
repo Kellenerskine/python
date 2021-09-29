@@ -27,8 +27,8 @@ class Date:
         else:
             m = self.month
             y = self.year
-        dow = (self.day + (13 * (m + 1) / 5 // 5 + y + y // 4 - y // 100 + y // 400) % 7)
-# i wrote the above zeller form wrong, program therefore does not work.
+        dow = (self.day + (13 * (m + 1)) // 5 + y + y // 4 - y // 100 + y // 400) % 7
+        # i wrote the above zeller form wrong, program therefore does not work.
         return 7 if dow == 0 else dow
 
     def print(self):
