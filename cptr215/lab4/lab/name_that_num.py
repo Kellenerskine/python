@@ -1,4 +1,20 @@
 def wordsFromNumber(number):
+    """Function should take a number and return that number in words
+    >>> wordsFromNumber(278644094904718128) #big numbers
+    'two hundred seventy-eight quadrillion six hundred forty-four trillion ninety-four billion nine hundred four million seven hundred eighteen thousand one hundred twenty-eight'
+    >>> wordsFromNumber(400)
+    'four hundred'
+    >>> wordsFromNumber(420)
+    'four hundred twenty'
+    >>> wordsFromNumber(418)
+    'four hundred eighteen'
+    >>> wordsFromNumber(428)
+    'four hundred twenty-eight'
+    >>> wordsFromNumber(408)
+    'four hundred eight'
+    >>> wordsFromNumber(888568485034000808)
+    'eight hundred eighty-eight quadrillion five hundred sixty-eight trillion four hundred eighty-five billion thirty-four million eight hundred eight'
+    """
     if int(number) == 0:
         return "zero"
     result = ""
@@ -23,6 +39,7 @@ def wordsFromNumber(number):
     hiphen = 0  # means the words have no hiphens
 
     for string in num_strings:
+        is_a_teen = 0
         for num in string:
             pos += 1
             if pos > 3:
@@ -68,20 +85,30 @@ def wordsFromNumber(number):
                 result = (result + ones[int(num)])
                 if ((counter != len(num_strings)) or len(num_strings) == 1) and (pos == 1):
                     result += " hundred "
-            # result += " "
-        result += " " + suffixes[counter] + " "
+        sum_of_string = int(string[0]) + int(string[1]) + int(string[2])
+        if sum_of_string != 0:
+            result += " " + suffixes[counter] + " "
         counter -= 1
 
     result_strings = result.split()
     result = ""
     for i in range(len(result_strings)):
         result += result_strings[i]
-        if (i != (len(result_strings) - 1)): #and (hiphen == 0)
+        if i != (len(result_strings) - 1):  # and (hiphen == 0)
             result += " "
-
 
     return result
 
+if __name__ == '__main__':
+    import doctest
+    doctest.testmod()
+    number_input = input("type a num: ")
+    print(wordsFromNumber(number_input))
 
-number_input = input("type a num: ")
-print(wordsFromNumber(number_input))
+
+
+
+# still having some issues with big numbers, is_a_teen = 1 and so the program skips over the last number
+# need some way to reset
+
+
