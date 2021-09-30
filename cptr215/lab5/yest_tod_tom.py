@@ -88,6 +88,43 @@ class Date:
         return self.year % 400 == 0 or \
                (self.year % 4 == 0 and self.year % 100 != 0)
 
+    # TODO: add the proper logic to the following functions
+
+    def previous_day(self):
+        """input a date and output the day before
+        >>> Date(2021, 9, 20).previous_day()
+        Date(2021, 9, 19)
+        >>> Date(2021, 3, 1).previous_day()
+        Date(2021, 2, 28)
+        >>> Date(1984, 3, 1).previous_day()
+        Date(1984, 2, 29)
+        >>> Date(2002, 1, 1).previous_day()
+        Date(2001, 12, 31)
+        """
+
+        days_in_month = ['', '31', '28', '31', '30', '31', '30', '31', '31', '30', '31', '30', '31']
+        if (self.month == 3) and self.is_leap_year() and (self.day == 1):
+            return Date(self.year, self.month - 1, 29)
+        elif self.month == 1 and self.day == 1:
+            return Date(self.year - 1, self.month + 11, days_in_month[12])
+        elif self.day == 1:
+            return Date(self.year, self.month - 1, days_in_month[self.month-1])
+        else:
+            return Date(self.year, self.month, self.day - 1)
+
+
+    def next_day(self):
+        pass
+
+    def equals(self, other):
+        pass
+
+    def before(self, other):
+        pass
+
+    def after(self, other):
+        pass
+
 
 if __name__ == "__main__":
     import doctest
