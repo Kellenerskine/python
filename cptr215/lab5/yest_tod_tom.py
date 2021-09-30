@@ -102,28 +102,100 @@ class Date:
         Date(2001, 12, 31)
         """
 
-        days_in_month = ['', '31', '28', '31', '30', '31', '30', '31', '31', '30', '31', '30', '31']
+        days_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
         if (self.month == 3) and self.is_leap_year() and (self.day == 1):
             return Date(self.year, self.month - 1, 29)
         elif self.month == 1 and self.day == 1:
             return Date(self.year - 1, self.month + 11, days_in_month[12])
         elif self.day == 1:
-            return Date(self.year, self.month - 1, days_in_month[self.month-1])
+            return Date(self.year, self.month - 1, days_in_month[self.month - 1])
         else:
             return Date(self.year, self.month, self.day - 1)
 
-
     def next_day(self):
-        pass
+        """input a date and output the day before
+        >>> Date(2021, 9, 20).next_day()
+        Date(2021, 9, 21)
+        >>> Date(2021, 2, 28).next_day()
+        Date(2021, 3, 1)
+        >>> Date(1984, 2, 28).next_day()
+        Date(1984, 2, 29)
+        >>> Date(2002, 12, 31).next_day()
+        Date(2003, 1, 1)
+        >>> Date(8612, 3, 1).next_day()
+        Date(8612, 3, 2)
+        >>> Date(6340, 3, 1).next_day()
+        Date(6340, 3, 2)
+        """
+        days_in_month = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+        if (self.month == 2) and self.is_leap_year() and (self.day == 28):
+            return Date(self.year, self.month, 29)
+
+        elif self.month == 12 and self.day == 31:
+            return Date(self.year + 1, self.month - 11, 1)
+
+        elif days_in_month[self.month] == self.day:
+            return Date(self.year, self.month + 1, 1)
+        else:
+            return Date(self.year, self.month, self.day + 1)
 
     def equals(self, other):
-        pass
+        """tests to see if the dates are the same and if so returns true
+        >>> Date(2002, 4, 9).equals(Date(2002, 4, 9))
+        True
+        """
+        if (self.year == other.year) and (self.month == other.month) and (self.day == other.day):
+            return True
+        else:
+            return False
 
     def before(self, other):
-        pass
+        """tests to see if one date is before another
+        >>> Date(2021, 5, 8).before(Date(2021, 4, 7))
+        False
+        >>> Date(2021, 5, 8).before(Date(2021, 5, 9))
+        True
+        >>> Date(2021, 7, 8).before(Date(2021, 6, 9))
+        False
+        >>> Date(2021, 7, 8).before(Date(2021, 8, 7))
+        True
+        >>> Date(2020, 7, 8).before(Date(2021, 7, 11))
+        True
+        >>> Date(2020, 8, 9).before(Date(2019, 4, 9))
+        False
+        """
+        if self.year < other.year:
+            return True
+        elif (self.year == other.year) and (self.month < other.month):
+            return True
+        elif (self.year == other.year) and (self.month == other.month) and (self.day < other.day):
+            return True
+        else:
+            return False
 
     def after(self, other):
-        pass
+        """tests to see if one date is after another
+        >>> Date(2021, 5, 8).after(Date(2021, 4, 7))
+        True
+        >>> Date(2021, 5, 8).after(Date(2021, 5, 9))
+        False
+        >>> Date(2021, 7, 8).after(Date(2021, 6, 9))
+        True
+        >>> Date(2021, 7, 8).after(Date(2021, 8, 7))
+        False
+        >>> Date(2020, 7, 8).after(Date(2021, 7, 11))
+        False
+        >>> Date(2020, 8, 9).after(Date(2019, 4, 9))
+        True
+        """
+        if self.year > other.year:
+            return True
+        elif (self.year == other.year) and (self.month > other.month):
+            return True
+        elif (self.year == other.year) and (self.month == other.month) and (self.day > other.day):
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
