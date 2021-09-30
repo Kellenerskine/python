@@ -104,8 +104,6 @@ for day in range(1, num_days_in_month+1):
         print()
     count += 1
 
-# objective
-# 1. find the first day of the month
-# 2. print the first of the month under the correct day with spaces as a
-# string which then multiplies by the amount of days before the start day.
+
+# 2a. need to make sure the lines of text wrap down to the next week
 # 3. write tests
