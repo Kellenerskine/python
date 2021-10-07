@@ -13,17 +13,57 @@ class UnoCard:
     def can_be_played_on(self, other):
         """takes another card and determines whether this card can be played on it, following standard rules
         (matches color or number/symbol, or is a Wild/Draw Four).
-
+        >>> UnoCard("B", "3").can_be_played_on(UnoCard("B", "4"))
+        True
+        >>> UnoCard("B", "3").can_be_played_on(UnoCard("R", "4"))
+        False
+        >>> UnoCard("B", "3").can_be_played_on(UnoCard("R", "3"))
+        True
+        >>> UnoCard("R", "D").can_be_played_on(UnoCard("B", "D"))
+        True
+        >>> UnoCard("K", "W").can_be_played_on(UnoCard("R", "R"))
+        True
         """
+        if self.color == other.color:
+            return True
+        elif self.rank == other.rank:
+            return True
+        elif self.color == "K":
+            return True
+        else:
+            return False
 
     def score_value(self):
-        pass
+        """
+        >>> UnoCard("K", "F").score_value()
+        50
+        >>> UnoCard("R", "S").score_value()
+        20
+        >>> UnoCard("Y", "D").score_value()
+        20
+        >>> UnoCard("G", "R").score_value()
+        20
+        >>> UnoCard("K", "W").score_value()
+        50
+        >>> UnoCard("R", "4").score_value()
+        4
+        """
+        if self.color == "K":
+            return 50
+        elif self.rank == "S" or self.rank == "D" or self.rank == "R":
+            return 20
+        else:
+            return int(self.rank)
 
     def __repr__(self):
         pass
 
     def __str__(self):
-        pass
+        """
+        >>> str(UnoCard("G", "1"))
+        'G1'
+        """
+        return f"{self.color}{self.rank}"
 
 
 def create_deck():
@@ -35,7 +75,7 @@ def create_deck():
     deck = []
     colors = ["R", "G", "B", "Y"]
     values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "S", "D", "R"]
-    wild_cards = ["Wild", "Draw Four"]
+    wild_cards = ["W", "F"]
 
     for color in colors:
         for value in values:
@@ -44,8 +84,8 @@ def create_deck():
             if value != 0:  # adds a duplicate card if the val is not 0
                 deck.append(card_val)
     for i in range(4):
-        deck.append(wild_cards[0])
-        deck.append(wild_cards[1])
+        deck.append(f"UnoCard(K, {wild_cards[0]})")
+        deck.append(f"UnoCard(K, {wild_cards[1]})")
 
     random.shuffle(deck)
 
@@ -76,7 +116,14 @@ def deal_hands(deck, num_hands):  # (deck, num_hands)
 
 def hand_score(hand):
     """takes a list of UnoCards and returns the total score for that hand.
+    >>>
     """
+    score = 0
+    for i in hand:
+        card_score = UnoCard.score_value(i)
+        score += card_score
+
+    return score
 
 
 unoDeck = create_deck()
