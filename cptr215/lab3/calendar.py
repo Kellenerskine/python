@@ -51,11 +51,12 @@ def leap_year_check(year):
         return False
 
 
-user_input = input("Input the month and year: ").split()  # bring in month and year
+user_input = input().split()  # bring in month and year
 user_month = int(user_input[0])  # user inputted month
 user_year = int(user_input[1])  # user inputted year
 
-start_day_num = day_of_week_num(user_year, user_month)
+
+start_day_num = (day_of_week_num(user_year, user_month)) - 1
 month_start_day = day_of_week_word(start_day_num)
 num_days_in_month = 0
 num_days_dict = {
@@ -93,6 +94,9 @@ print("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")  # prints the day names
 # the loop to print the calendar days
 count = 7 - start_day_num
 for day in range(1, num_days_in_month+1):
+    if count == 0:
+        print()
+        count = 7
     if day == 1:
         spaces = " " * (start_day_num*3)
         print(spaces, end='')
@@ -100,9 +104,7 @@ for day in range(1, num_days_in_month+1):
         print(day, "", end='')
     else:
         print(day, ' ', end='')
-    if (count % 7 == 0) and count != 0:
-        print()
-    count += 1
+    count -= 1
 
 
 # 2a. need to make sure the lines of text wrap down to the next week
