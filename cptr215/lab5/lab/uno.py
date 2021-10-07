@@ -52,22 +52,26 @@ def create_deck():
     return deck
 
 
-def deal_hands(deck, num_hands):
+def deal_hands(deck, num_hands):  # (deck, num_hands)
     """returns a tuple of num_hands lists of 7 cards dealt from deck, 1 to each hand at a time (not all 7 to a single hand consecutively).
     Removes the cards that were dealt from the "top" of the deck (starting at position 0).
     """
-
+    # deck = [0, 1, 2, 0, 1, "2", 0, 1, 2, 0, 1, 2]
+    # num_hands = 3
     cards_drawn = []
-    hands = []
+    test_cards_drawn = () + tuple(cards_drawn)
+    hands = [[], [], [], [], [], [], [], [], [], [], [], [], [], [], [], []]
+    # draws 28 cards from the deck from the top
     for i in range(7):
         for hand in range(num_hands):
-            cards_drawn.append(unoDeck.pop(0))
+            cards_drawn.append(deck.pop(0))
+            card = cards_drawn.pop(0)
+            hands[hand].append(card)
 
+    # removes empty lists from hands
+    hands = [x for x in hands if x != []]  # unsure of how this works...stack overflow...pls don't break :(
 
-
-
-
-
+    return tuple(hands)
 
 
 def hand_score(hand):
