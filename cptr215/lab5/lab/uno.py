@@ -56,40 +56,73 @@ class UnoCard:
             return int(self.rank)
 
     def __repr__(self):
-        pass
+        """
+
+        """
+        return f"UnoCard('{self.color}', '{self.rank}')"
 
     def __str__(self):
         """
         >>> str(UnoCard("G", "1"))
         'G1'
+        >>> str(UnoCard("B", "2"))
+        'B2'
+        >>> str(UnoCard("Y", "6"))
+        'Y6'
+        >>> str(UnoCard("K", "F"))
+        'KF'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
+        >>> str(UnoCard("K", "D"))
+        'KD'
         """
         return f"{self.color}{self.rank}"
 
 
 def create_deck():
     """returns a complete, shuffled Uno deck as a list of 108 UnoCard objects.
+
     """
     # TODO: make this a shuffled list of cards [works, if allowed to import random]
     # TODO: make sure all cards are included in this deck [done]
 
     deck = []
+    count = 0
     colors = ["R", "G", "B", "Y"]
     values = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "S", "D", "R"]
     wild_cards = ["W", "F"]
+    new_list = []
 
     for color in colors:
         for value in values:
-            card_val = f"UnoCard({color}, {value})"
+            card_val = f"{color}{value}"
             deck.append(card_val)
+            count += 1
             if value != 0:  # adds a duplicate card if the val is not 0
                 deck.append(card_val)
+                count += 1
     for i in range(4):
-        deck.append(f"UnoCard(K, {wild_cards[0]})")
-        deck.append(f"UnoCard(K, {wild_cards[1]})")
+        deck.append(f"K{wild_cards[0]}")
+        deck.append(f"K{wild_cards[1]}")
+        count += 2
 
-    random.shuffle(deck)
+    for i in deck:
+        new_val = UnoCard(i[0], i[1])
+        new_list.append(new_val)
 
-    return deck
+    random.shuffle(new_list)
+
+    return new_list
 
 
 def deal_hands(deck, num_hands):  # (deck, num_hands)
@@ -116,7 +149,7 @@ def deal_hands(deck, num_hands):  # (deck, num_hands)
 
 def hand_score(hand):
     """takes a list of UnoCards and returns the total score for that hand.
-    >>>
+    # >>> hand_score(([]))
     """
     score = 0
     for i in hand:
@@ -125,6 +158,10 @@ def hand_score(hand):
 
     return score
 
+#
+# # unoDeck = (create_deck())
+# for i in create_deck():
+#     strings = str(i)
+#     print(repr(strings), end='')
+print(create_deck())
 
-unoDeck = create_deck()
-print(deal_hands(create_deck(), 4))

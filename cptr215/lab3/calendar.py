@@ -15,21 +15,6 @@ def day_of_week_num(user_year2, user_month2):
     result = (h % 7)
     return result
 
-#
-# def day_of_week_word(day_num):
-#     day_name_dict = {
-#         1: "Sunday",
-#         2: "Monday",
-#         3: "Tuesday",
-#         4: "Wednesday",
-#         5: "Thursday",
-#         6: "Friday",
-#         7: "Saturday"
-#     }
-#
-#     day_of_week = day_name_dict[day_num]
-#     return day_of_week
-
 
 def leap_year_check(year):
     is_leap_year = False
@@ -55,14 +40,9 @@ user_input = input().split()  # bring in month and year
 user_month = int(user_input[0])  # user inputted month
 user_year = int(user_input[1])  # user inputted year
 
-# user_month = 7
-# user_year = 2000
-
 
 start_day_num = (day_of_week_num(user_year, user_month)) - 1
-# if user_month == 1:
-#     start_day_num += 1
-# month_start_day = day_of_week_word(start_day_num)
+
 num_days_in_month = 0
 num_days_dict = {
         1: 31,
