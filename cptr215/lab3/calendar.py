@@ -15,20 +15,20 @@ def day_of_week_num(user_year2, user_month2):
     result = (h % 7)
     return result
 
-
-def day_of_week_word(day_num):
-    day_name_dict = {
-        1: "Sunday",
-        2: "Monday",
-        3: "Tuesday",
-        4: "Wednesday",
-        5: "Thursday",
-        6: "Friday",
-        7: "Saturday"
-    }
-
-    day_of_week = day_name_dict[day_num]
-    return day_of_week
+#
+# def day_of_week_word(day_num):
+#     day_name_dict = {
+#         1: "Sunday",
+#         2: "Monday",
+#         3: "Tuesday",
+#         4: "Wednesday",
+#         5: "Thursday",
+#         6: "Friday",
+#         7: "Saturday"
+#     }
+#
+#     day_of_week = day_name_dict[day_num]
+#     return day_of_week
 
 
 def leap_year_check(year):
@@ -55,9 +55,14 @@ user_input = input().split()  # bring in month and year
 user_month = int(user_input[0])  # user inputted month
 user_year = int(user_input[1])  # user inputted year
 
+# user_month = 7
+# user_year = 2000
+
 
 start_day_num = (day_of_week_num(user_year, user_month)) - 1
-month_start_day = day_of_week_word(start_day_num)
+# if user_month == 1:
+#     start_day_num += 1
+# month_start_day = day_of_week_word(start_day_num)
 num_days_in_month = 0
 num_days_dict = {
         1: 31,
@@ -87,25 +92,64 @@ month_name_list = (
 # the generic header text for the calendar
 month_name_out = month_name_list[user_month]
 header = (month_name_out + " " + str(user_year))
+if user_month == 1:
+    print("   ", header)
+else:
+    print("  ", header)
 # gets the month name
-print(str(header).center(20))  # centers the month name
+# print(str(header).center(20))  # centers the month name
+
 print("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")  # prints the day names
 
+rand_counter = 0
 # the loop to print the calendar days
+if start_day_num < 0:
+    start_day_num = 6
+    rand_counter = 1
 count = 7 - start_day_num
+space_count = 0
+print(" ", end='')
+
 for day in range(1, num_days_in_month+1):
     if count == 0:
         print()
         count = 7
+        space_count = 1
+    count -= 1
     if day == 1:
         spaces = " " * (start_day_num*3)
         print(spaces, end='')
     if day > 9:
-        print(day, "", end='')
+        if day == num_days_in_month:
+            print(day, end="")
+        else:
+            if count == 0:
+                print(day, end='')
+            else:
+                print(day, "", end='')
+    elif day == 9:
+        if count == 0:
+            print(day, end='')
+        else:
+            print("", day, "", end='')
+    elif day < 10 and space_count == 1:
+        if count == 0:
+            print(day, end='')
+        else:
+            print("", day, "", end='')
     else:
-        print(day, ' ', end='')
-    count -= 1
+        if count == 0:
+            print(day, end='')
+        else:
+            if day == num_days_in_month:
+                print(day, end="")
+            else:
+                print(day, ' ', end='')
 
+if rand_counter == 1:
+    count += 1
+else:
+    print()
+    print()
 
-# 2a. need to make sure the lines of text wrap down to the next week
 # 3. write tests
