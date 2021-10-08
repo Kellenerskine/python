@@ -50,10 +50,13 @@ class SetCard:
         """Returns the third card that makes a set with self and other.
         >>> card1 = SetCard(2, Fill.EMPTY, Color.RED, Shape.QUAD)
         >>> card2 = SetCard(1, Fill.SHADED, Color.BLUE, Shape.OVAL)
+        >>> card3 = SetCard(2 ,Fill.FILLED, Color.GREEN, Shape.PYRAMID)
         >>> print(card1.third_card(card2))
         3FGP
         >>> print(card2.third_card(card1))
         3FGP
+        >>> print(card3.third_card(card1))
+        2SBO
         """
 
         card1 = str(self)
@@ -62,8 +65,8 @@ class SetCard:
         for j in card1:
             for k in card2:
                 if j == k:
-                    print(j,k)
 
+                    print(j, k)
 
 
 def make_deck():
