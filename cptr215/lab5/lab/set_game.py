@@ -55,7 +55,15 @@ class SetCard:
         >>> print(card2.third_card(card1))
         3FGP
         """
-        if card1[]
+
+        card1 = str(self)
+        card2 = str(other)
+
+        for j in card1:
+            for k in card2:
+                if j == k:
+                    print(j,k)
+
 
 
 def make_deck():
