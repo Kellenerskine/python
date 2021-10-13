@@ -55,37 +55,59 @@ class SetCard:
         #4.check when there is no equivalent card
         >>> card1 = SetCard(2, Fill.EMPTY, Color.RED, Shape.QUAD)
         >>> card2 = SetCard(1, Fill.SHADED, Color.BLUE, Shape.OVAL)
-        >>> card3 = SetCard(2 ,Fill.FILLED, Color.GREEN, Shape.PYRAMID)
-        >>> card4 = SetCard(1, Fill.FILLED, Color.Red, Shape.Quad)
-        >>> card5 = SetCard(2, Fill.SHADED, Color.BLUE, Shape.PYRAMID)
-        >>> print(card4.third_card(card5))
-        3EGO
         >>> print(card1.third_card(card2))
         3FGP
         >>> print(card2.third_card(card1))
         3FGP
-        >>> print(card3.third_card(card1))
-        2SBO
+        >>> card1 = SetCard(2, Fill.EMPTY, Color.RED, Shape.QUAD)
+        >>> card2 = SetCard(2, Fill.SHADED, Color.BLUE, Shape.OVAL)
+        >>> print(card2.third_card(card1))
+        2FGP
         """
-        #
-        # fill = 0
-        # color = 0
-        # shape = 0
-        #
-        #
-        # for
-        # if self.color == other.color
+        fill_options = "ESF"
+        color_options = "RGB"
+        shape_options = "QOP"
+        num_is_same = 0
+        fill_is_same = 0
+        color_is_same = 0
+        shape_is_same = 0
 
         first_card = str(self)
         second_card = str(other)
         result = ""
 
-        for j in first_card:
-            for k in second_card:
-                if j == k:
-                    print(j, k)
-                    result = result + j
-                    print(result)
+        # statements for if the numbers are the same
+        if first_card[0] == second_card[0]:  # assigns the number of shapes
+            result += str(first_card[0])
+            num_is_same = 1
+            # making sure that every other thing is different
+            if num_is_same == 1:
+                fill_options = fill_options.replace(str(first_card[1]), "")
+                fill_options = fill_options.replace(str(second_card[1]), "")
+                result += fill_options
+            if num_is_same == 1:
+                color_options = color_options.replace(str(first_card[2]), "")
+                color_options = color_options.replace(str(second_card[2]), "")
+                result += color_options
+            if num_is_same == 1:
+                shape_options = shape_options.replace(str(first_card[3]), "")
+                shape_options = shape_options.replace(str(second_card[3]), "")
+                result += shape_options
+            return result
+        else:
+            # finding the correct 3rd num
+            for i in range(1, 4):  # assigns a different first num than the previous two cards
+                if str(i) != first_card[0] and str(i) != second_card[0]:
+                    result += str(i)
+            if first_card[1] == second_card[1]:
+                pass
+            if first_card[2] == second_card[2]:
+                pass
+            if first_card[3] == second_card[3]:
+                pass
+
+        #TODO: maybe use an elif?
+
 
 
 def make_deck():
@@ -102,4 +124,10 @@ def is_set(card1, card2, card3):
 if __name__ == "__main__":
     import doctest
 
+    # user_input = input("type something appropriate: ")
+    # user_input.split()
+    # inp1 = user_input[0]
+    # inp2 = user_input[1]
+    # results = SetCard.third_card(inp1, inp2)
+    # print(results)
     doctest.testmod()
