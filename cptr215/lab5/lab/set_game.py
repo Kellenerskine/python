@@ -106,8 +106,7 @@ class SetCard:
             if first_card[3] == second_card[3]:
                 pass
 
-        #TODO: maybe use an elif?
-
+        # TODO: maybe use an elif?
 
 
 def make_deck():
