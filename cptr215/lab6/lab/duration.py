@@ -24,6 +24,7 @@ class Duration:
     # """
 
     def __init__(self, first_arg, second_arg=None, third_arg=None):
+        # TODO: get rid of all variables and convert to seconds immediately
         self.time_lst = []
         self.day = ""
         self.days = ""
@@ -107,7 +108,7 @@ class Duration:
             self.second = self.time_lst[2]
 
         self.total_seconds = (int(self.day) * 24 * 60 * 60) + (int(self.hour) * 60 * 60) + (
-                    int(self.minute) * 60) + int(self.second)
+                int(self.minute) * 60) + int(self.second)
         self.hour = str(round((self.total_seconds / 3600) // 1))
         self.minute = str(round(((self.total_seconds - int(self.hour) * 3600) / 60) // 1))
         if self.is_negative:
@@ -130,6 +131,7 @@ class Duration:
 
     def __str__(self):
         return f"{self.hour}:{self.minute}:{self.second}"
+
 
 # TODO: write function that grabs the amount of time from the input string
 # TODO: write function to convert that time to seconds
