@@ -25,14 +25,12 @@ class Duration:
 
     def __init__(self, first_arg, second_arg=None, third_arg=None):
         # TODO: get rid of all variables and convert to seconds immediately
+
+
+
         self.time_lst = []
-        self.day = ""
-        self.days = ""
         self.total_seconds = 0
         self.is_negative = False
-        self.hour = 0
-        self.minute = 0
-        self.second = 0
         if type(first_arg) is int:
             self.hour = first_arg
             self.minute = second_arg
