@@ -25,20 +25,27 @@ class Duration:
 
     # TODO: get rid of all variables and convert to seconds immediately
 
-    def __init__(self, first_arg, second_arg=None, third_arg=None):
-        self.total_seconds = 0
-        self.is_negative = False
-        if type(first_arg) is int:
+    def __init__(self, total_seconds):
+        self.total_seconds = total_seconds
 
-            self.hour_in_secs = first_arg * 60 * 60
-            self.minute_in_secs = second_arg * 60
-            self.second = third_arg
-            time_lst = [self.hour, self.minute, self.second]
-        else:
-            time_lst = list(first_arg)
+        @classmethod
+        def from_hms(cls, hours=0, minutes=0, seconds=0):
+            return cls(hours * 3600 + minutes * 60 + seconds)
 
-        if "-" in time_lst:
-            self.is_negative = True
+        @classmethod
+        def parse_hms(cls, hms_text):
+            if ":" in hms_text:
+                h, m, s = hms_text.split(':', maxsplit=3)
+                return cls.from_hms(h, m, s)
+            elif "d" in hms_text or "h" in hms_text or "m" in hms_text or "s" in hms_text:
+                if "d" in hms_text:
+                    days = hms_text[hms_text.index("d") - 1]
+                if "h" in hms_text:  # TODO: edit to handle 2 digit nums
+                    hours = hms_text[hms_text.index("h") - 1]
+                if "m" in hms_text:
+                    minutes = hms_text[0:hms_text.index("m")]
+                if "s" in hms_text:
+                    seconds = hms_text[0:hms_text.index("s")]
 
     # comparison operators
     def __add__(self, other):
