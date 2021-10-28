@@ -34,7 +34,7 @@ class Duration:
         total += (int(hours) * 3600) if hours is not None and int(hours) > 0 else 0
         total += (int(minutes) * 60) if minutes is not None and int(minutes) > 0 else 0
         total += int(seconds) if seconds is not None and int(seconds) > 0 else 0
-        # return total
+        return total
 
     @classmethod
     def parse_hms(cls, hms_text):
@@ -123,7 +123,6 @@ class Duration:
         second = (self.total_seconds - (hour*3600) - (minute*60))
         return f"{sign}{hour}:{minute}:{second}"
 
-# TODO: write function that grabs the amount of time from the input string
 # TODO: write function to convert that time to seconds
 # TODO: write function to do the math on the times in seconds
 # TODO: write repr function that takes the result from the math function and converts to proper format
