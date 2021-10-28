@@ -21,11 +21,14 @@ class Duration:
     # False
     # >>> print(dur_45_sec + dur_neg_45_sec)
     # 0:00:00
+    >>> dur_90_min = Duration("1:30:00")
     >>> dur_45_sec = Duration("0d0h45s")
-    >>> dur_45_sec * (2 * 60)
-    '1:30:00'
+    >>> dur_90_min - dur_45_sec # you can represent it however you want, but the repr MUST look like this:
+    Duration('1:29:15')
+    >>> dur_45_sec - dur_90_min
+    Duration('-1:29:15')
     """
-    is_negative = True
+
     # TODO: get rid of all variables and convert to seconds immediately
 
     @classmethod
@@ -40,14 +43,13 @@ class Duration:
     def parse_hms(cls, hms_text):
         is_negative = True if hms_text[0] == "-" else False
         days_in_hrs, hours, minutes, seconds = 0, 0, 0, 0
-
         if ":" in hms_text:
             h, m, s = hms_text.split(':', maxsplit=3)
             return cls.from_hms(h, m, s)
         elif "d" in hms_text or "h" in hms_text or "m" in hms_text or "s" in hms_text:
             if "d" in hms_text:
                 days_in_hrs = int(hms_text[hms_text.index("d") - 1]) * 24
-            if "h" in hms_text:  # TODO: edit to handle 2 digit nums
+            if "h" in hms_text:
                 hours = int(hms_text[hms_text.index("h") - 1])
             if "m" in hms_text:
                 if "h" in hms_text:
@@ -64,25 +66,48 @@ class Duration:
         return cls.from_hms((days_in_hrs + hours), minutes, seconds)
 
     def __init__(self, a, b=None, c=None):
+        self.hour, self.minute, self.second = 0, 0, 0
         if isinstance(a, str):
+            self.is_negative = True if a[0] == "-" else False
             self.total_seconds = Duration.parse_hms(a)
+            self.hour = self.total_seconds // 3600
+            self.minute = (self.total_seconds - (self.hour * 3600)) // 60
+            self.second = (self.total_seconds - (self.hour * 3600) - (self.minute * 60))
         else:
+            self.is_negative = a < 0
             self.total_seconds = Duration.from_hms(a, b, c)
+            self.hour = a
+            self.minute = b
+            self.second = c
 
     # comparison operators
-
     def __add__(self, other):
-        self.total_seconds *= -1 if self.is_negative else self.total_seconds * 1
-        return self.total_seconds + other.total_seconds
+        secs = self.total_seconds
+        other_secs = other.total_seconds
+        secs *= -1 if self.is_negative else 1
+        other_secs *= -1 if self.is_negative else 1
+        total_seconds = secs + other_secs
+        hour = total_seconds // 3600
+        minute = (total_seconds - (hour * 3600)) // 60
+        second = (total_seconds - (hour * 3600) - (minute * 60))
+        return Duration(hour, minute, second)
 
     def __sub__(self, other):
         secs = self.total_seconds
-        secs *= -1 if self.is_negative else secs * 1
-        return self.total_seconds - other.total_seconds
+        other_secs = other.total_seconds
+        secs *= -1 if self.is_negative else 1
+        total_seconds = secs - other_secs
+        hour = total_seconds // 3600
+        minute = (total_seconds - (hour * 3600)) // 60
+        second = (total_seconds - (hour * 3600) - (minute * 60))
+        return Duration(hour, minute, second)
 
     def __mul__(self, other):
-        self.total_seconds *= -1 if self.is_negative else self.total_seconds * 1
-        return self.total_seconds * other
+        total_seconds = self.total_seconds * other
+        hour = total_seconds // 3600
+        minute = (total_seconds - (hour * 3600)) // 60
+        second = (total_seconds - (hour * 3600) - (minute * 60))
+        return Duration(hour, minute, second)
 
     def __gt__(self, other):
         self.total_seconds *= -1 if self.is_negative else self.total_seconds * 1
@@ -109,23 +134,25 @@ class Duration:
         return True if self.total_seconds != other.total_seconds else False
 
     def __repr__(self):
-        sign = "-" if self.is_negative else ""
-        hour = self.total_seconds // 3600
-        minute = (self.total_seconds - (hour*3600)) // 60
-        second = (self.total_seconds - (hour*3600) - (minute*60))
-        min2 = "0" if minute < 10 else ""
-        return f"Duration('{sign}{hour}:{min2}{minute}:{second}')"
+        if self.total_seconds == 0:
+            return '0:00:00'
+        else:
+            sign = "-" if self.is_negative else ""
+            min2 = "0" if self.minute < 10 else ""
+            sec2 = "0" if self.second < 10 else ""
+            if self.hour < 0:
+                sign = ""
+            return f"Duration('{sign}{self.hour}:{min2}{self.minute}:{sec2}{self.second}')"
 
     def __str__(self):
         sign = "-" if self.is_negative else ""
         hour = self.total_seconds // 3600
-        minute = (self.total_seconds - (hour*3600)) // 60
-        second = (self.total_seconds - (hour*3600) - (minute*60))
-        return f"{sign}{hour}:{minute}:{second}"
+        minute = (self.total_seconds - (hour * 3600)) // 60
+        second = (self.total_seconds - (hour * 3600) - (minute * 60))
+        min2 = "0" if self.minute < 10 else ""
+        sec2 = "0" if self.second < 10 else ""
+        return f"{sign}{hour}:{min2}{minute}:{sec2}{second}"
 
 # TODO: write function to convert that time to seconds
 # TODO: write function to do the math on the times in seconds
 # TODO: write repr function that takes the result from the math function and converts to proper format
-
-
-
