@@ -3,7 +3,7 @@ file = open(file_name)
 total_lines, loc, other = 0, 0, 0
 for line in file:
     total_lines += 1
-    if line.strip()[0] == '#':
+    if line.strip().startswith('#'):
         other += 1
     else:
         loc += 1
