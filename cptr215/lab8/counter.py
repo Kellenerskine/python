@@ -126,7 +126,7 @@ class ListCounter(BoundedCounter):
 
 
 class FixedLengthCounter(BoundedCounter):
-    def __init__(self, lo, hi, length, val=None):
+    def __init__(self, lo, hi, val=None, length=0):
         super().__init__(lo, hi)
         self.length = length
 
@@ -174,12 +174,67 @@ class Date:
 
 class Clock12:
     def __init__(self, h, m):
-        pass
+        self.h = h
+        self.m = m
+
+        self.ampm = ListCounter(["am", "pm"])
+        self.hour = ListCounter([12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], h).add_increment(self.ampm)
+        self.minute = FixedLengthCounter(1, 59, m, 2).add_increment(self.hour)
+
+    def __repr__(self):
+        return f"{self.hour.current_value}, {self.minute.current_value}"
+
+    def __str__(self):
+        minute = self.minute.current_value
+        if minute == 0:
+            minute = '00'
+        return f"{self.hour.current_value}:{minute}"
+
+    def next_hour(self):
+        """
+        >>> next_time = Clock12(1, 30)
+        >>> next_time.next_hour()
+        1:31
+        >>> next_time = Clock12(11, 59)
+        >>> next_time.next_hour()
+        12:00
+        """
+        self.minute.increment()
+        print(self)
 
 
 class Clock24:
-    def __init__(self, ):
-        pass
+    def __init__(self, h, m):
+        self.h = h
+        self.m = m
+
+        hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
+        self.hour = BoundedCounter(1, 24, h)
+        self.minute = BoundedCounter(0, 60, m).add_increment(self.hour)
+
+    def __repr__(self):
+        return f"{self.hour.current_value}, {self.minute.current_value}"
+
+    def __str__(self):
+        prefix = ""
+        prefix2 = ""
+        if self.minute.current_value < 10:
+            prefix = "0"
+        if self.hour.current_value < 10:
+            prefix2 = "0"
+        return f"{prefix2}{self.hour.current_value}:{prefix}{self.minute.current_value}"
+
+    def next_time(self):
+        """
+        >>> next_time = Clock24(13, 1)
+        >>> next_time.next_time()
+        13:02
+        >>> next_time = Clock24(9, 59)
+        >>> next_time.next_time()
+        10:00
+        """
+        self.minute.increment()
+        print(self)
 
 
 if __name__ == "__main__":
@@ -195,5 +250,3 @@ if __name__ == "__main__":
     # for _ in range(20):
     #     print(bit1)
     #     bit1.increment()
-
-# year bounds: 1752 - 9999
