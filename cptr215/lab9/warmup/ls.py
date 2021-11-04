@@ -1,4 +1,3 @@
-import sys
 import os
 
 working_dir = os.getcwd()
@@ -13,4 +12,5 @@ for dirname, subdirs, files in os.walk(working_dir):
 
 result_list = sorted(result_list, key=str.lower)
 for i in result_list:
-    print(i)
+    if i[0] != ".":
+        print(i)
