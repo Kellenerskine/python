@@ -207,6 +207,9 @@ class Clock12:
         >>> next_time = Clock12(11, 59, "AM")
         >>> next_time.next_minute()
         PM 12:00
+        >>> next_time = Clock12(11, 59, "PM")
+        >>> next_time.next_minute()
+        AM 12:00
         """
         self.minute.increment()
         print(self)
