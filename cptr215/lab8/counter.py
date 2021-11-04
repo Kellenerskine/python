@@ -128,6 +128,7 @@ class ListCounter(BoundedCounter):
 class FixedLengthCounter(BoundedCounter):
     def __init__(self, lo, hi, val=None, length=0):
         super().__init__(lo, hi)
+        self.val = val
         self.length = length
 
     def get_value(self):
@@ -173,11 +174,12 @@ class Date:
 
 
 class Clock12:
-    def __init__(self, h, m):
+    def __init__(self, h, m, day_half="PM"):
         self.h = h
         self.m = m
+        self.day_half = day_half
 
-        self.ampm = ListCounter(["am", "pm"])
+        self.ampm = ListCounter(["AM", "PM"], day_half)
         self.hour = ListCounter([12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], h).add_increment(self.ampm)
         self.minute = FixedLengthCounter(1, 59, m, 2).add_increment(self.hour)
 
@@ -185,10 +187,13 @@ class Clock12:
         return f"{self.hour.current_value}, {self.minute.current_value}"
 
     def __str__(self):
+        prefix = ""
         minute = self.minute.current_value
         if minute == 0:
             minute = '00'
-        return f"{self.hour.current_value}:{minute}"
+        if self.minute.current_value < 10:
+            prefix = "0"
+        return f"{self.ampm.current_value}{self.hour.current_value}:{prefix}{minute}"
 
     def next_hour(self):
         """
