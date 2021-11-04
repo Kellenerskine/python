@@ -28,3 +28,5 @@ while i < len(sys.argv):
 
 if len(sys.argv) > 2:
     print(f"{total_num_lines} {total_num_words} {total_num_chars} Total")
+elif len(sys.argv) == 1:
+    print("No file was specified.")

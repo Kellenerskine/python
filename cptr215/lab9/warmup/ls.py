@@ -14,4 +14,3 @@ for dirname, subdirs, files in os.walk(working_dir):
 result_list = sorted(result_list, key=str.lower)
 for i in result_list:
     print(i)
-
