@@ -179,9 +179,10 @@ class Clock12:
         self.m = m
         self.day_half = day_half
 
+        self.hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         self.ampm = ListCounter(["AM", "PM"], day_half)
         self.hour = ListCounter([12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], h).add_increment(self.ampm)
-        self.minute = FixedLengthCounter(1, 59, m, 2).add_increment(self.hour)
+        self.minute = BoundedCounter(0, 59, m).add_increment(self.hour)
 
     def __repr__(self):
         return f"{self.hour.current_value}, {self.minute.current_value}"
@@ -191,18 +192,21 @@ class Clock12:
         minute = self.minute.current_value
         if minute == 0:
             minute = '00'
-        if self.minute.current_value < 10:
+        if self.minute.current_value < 10 and self.minute.current_value != 0:
             prefix = "0"
-        return f"{self.ampm.current_value}{self.hour.current_value}:{prefix}{minute}"
+        return f"{self.ampm} {self.hours[self.hour.current_value]}:{prefix}{minute}"
 
-    def next_hour(self):
+    def next_minute(self):
         """
-        >>> next_time = Clock12(1, 30)
-        >>> next_time.next_hour()
-        1:31
-        >>> next_time = Clock12(11, 59)
-        >>> next_time.next_hour()
-        12:00
+        >>> next_time = Clock12(1, 30, 'AM')
+        >>> next_time.next_minute()
+        AM 1:31
+        >>> next_time = Clock12(2, 58, "PM")
+        >>> next_time.next_minute()
+        PM 2:59
+        >>> next_time = Clock12(11, 59, "AM")
+        >>> next_time.next_minute()
+        PM 12:00
         """
         self.minute.increment()
         print(self)
@@ -215,7 +219,7 @@ class Clock24:
 
         hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
         self.hour = BoundedCounter(1, 24, h)
-        self.minute = BoundedCounter(0, 60, m).add_increment(self.hour)
+        self.minute = BoundedCounter(0, 59, m).add_increment(self.hour)
 
     def __repr__(self):
         return f"{self.hour.current_value}, {self.minute.current_value}"
