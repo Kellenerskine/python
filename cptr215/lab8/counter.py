@@ -126,10 +126,14 @@ class ListCounter(BoundedCounter):
 
 
 class FixedLengthCounter(BoundedCounter):
-    def __init__(self, lo, hi, val=None, length=0):
+    def __init__(self, lo, hi, val=None, length=1):
         super().__init__(lo, hi)
-        self.val = val
+        # self.val = val
         self.length = length
+        if val is None:
+            self.current_value = lo
+        else:
+            self.current_value = val
 
     def get_value(self):
         return f"{super().get_value():0{self.length}}"
@@ -179,22 +183,20 @@ class Clock12:
         self.m = m
         self.day_half = day_half
 
-        self.hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        # self.hours = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
         self.ampm = ListCounter(["AM", "PM"], day_half)
-        self.hour = ListCounter([12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], h).add_increment(self.ampm)
-        self.minute = BoundedCounter(0, 59, m).add_increment(self.hour)
+        self.space = StaticConnector(" ").add_increment(self.ampm)
+        self.hour = ListCounter([12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11], h).add_increment(self.space)
+        self.colon = StaticConnector(':').add_increment(self.hour)
+        # self.minute = BoundedCounter(0, 59, m).add_increment(self.colon)
+        self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
     def __repr__(self):
-        return f"{self.hour.current_value}, {self.minute.current_value}"
+        return f"{self.hour.current_value},{self.space}{self.minute.current_value}"
 
     def __str__(self):
-        prefix = ""
-        minute = self.minute.current_value
-        if minute == 0:
-            minute = '00'
-        if self.minute.current_value < 10 and self.minute.current_value != 0:
-            prefix = "0"
-        return f"{self.ampm} {self.hours[self.hour.current_value]}:{prefix}{minute}"
+        return str(self.minute)
+        #return f"{self.ampm.get_value()}{self.space.get_value()}{self.hour.get_value()}{self.colon.get_value()}{self.minute.get_value()}"
 
     def next_minute(self):
         """
@@ -210,6 +212,9 @@ class Clock12:
         >>> next_time = Clock12(11, 59, "PM")
         >>> next_time.next_minute()
         AM 12:00
+        >>> next_time = Clock12(11, 3, "PM")
+        >>> next_time.next_minute()
+        PM 11:04
         """
         self.minute.increment()
         print(self)
@@ -220,30 +225,25 @@ class Clock24:
         self.h = h
         self.m = m
 
-        hours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
-        self.hour = BoundedCounter(1, 24, h)
-        self.minute = BoundedCounter(0, 59, m).add_increment(self.hour)
+        self.hour = FixedLengthCounter(1, 24, h, 2)
+        self.colon = StaticConnector(":").add_increment(self.hour)
+        self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
     def __repr__(self):
         return f"{self.hour.current_value}, {self.minute.current_value}"
 
     def __str__(self):
-        prefix = ""
-        prefix2 = ""
-        if self.minute.current_value < 10:
-            prefix = "0"
-        if self.hour.current_value < 10:
-            prefix2 = "0"
-        return f"{prefix2}{self.hour.current_value}:{prefix}{self.minute.current_value}"
+        return str(self.minute)
+        # return f"{self.hour.get_value()}{self.colon.get_value()}{self.minute.get_value()}"
 
     def next_time(self):
         """
         >>> next_time = Clock24(13, 1)
         >>> next_time.next_time()
         13:02
-        >>> next_time = Clock24(9, 59)
+        >>> next_time = Clock24(24, 59)
         >>> next_time.next_time()
-        10:00
+        01:00
         """
         self.minute.increment()
         print(self)
