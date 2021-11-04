@@ -31,4 +31,3 @@ while i < len(sys.argv):
     else:
         print(f"{num_lines} {num_words} {num_chars}")
 print(f"total: {total_num_lines} {total_num_words} {total_num_chars}")
-
