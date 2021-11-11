@@ -1,7 +1,7 @@
 import sys
 
 search_word = sys.argv[1]
-results = ""
+lines = ""
 i = 2
 line_num = 0
 count_lines = False
@@ -24,19 +24,24 @@ while i < len(sys.argv):
             line_num += 1
             if ignore_case:
                 if search_word.lower() in lines.lower() or search_word in lines:
-                    results += lines
+                    if len(sys.argv) > 3 and count_lines == False:
+                        print(f"{current_file}:{lines}", end='')
+                    elif len(sys.argv) == 3 and count_lines == False:
+                        print(f"{lines}", end='')
+                    elif len(sys.argv) > 3 and count_lines == True:
+                        print(f"{current_file}:{line_num}:{lines}", end='')
+                    elif len(sys.argv) == 3 and count_lines == True:
+                        print(f"{line_num}:{lines}", end='')
             elif not ignore_case:
                 if search_word in lines:
-                    results += lines
+                    if len(sys.argv) > 3 and count_lines == False:
+                        print(f"{current_file}:{lines}", end='')
+                    elif len(sys.argv) == 3 and count_lines == False:
+                        print(f"{lines}", end='')
+                    elif len(sys.argv) > 3 and count_lines == True:
+                        print(f"{current_file}:{line_num}:{lines}", end='')
+                    elif len(sys.argv) == 3 and count_lines == True:
+                        print(f"{line_num}:{lines}", end='')
+        line_num = 0
 
-        if len(sys.argv) > 2 and count_lines == False:
-            print(f"{current_file} {results}")
-        elif len(sys.argv) <= 2 and count_lines == False:
-            print(f"{results}")
-        elif len(sys.argv) > 2 and count_lines == True:
-            print(f"Line {line_num} {current_file} {results}")
-        elif len(sys.argv) <= 2 and count_lines == True:
-            print(f"Line {line_num} {results}")
-
-        results = ""
     i += 1
