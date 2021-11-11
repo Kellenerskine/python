@@ -1,24 +1,35 @@
 import sys
-
-from PySide6.QtCore import QSize, Qt
-from PySide6.QtWidgets import QApplication, QMainWindow, QPushButton
+from PySide6.QtWidgets import QApplication, QMainWindow, QLineEdit, QVBoxLayout, QWidget, QListWidget, QListWidgetItem, QListView
 
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("Shopping list")
+        self.input = QLineEdit()
+        self.input.setFixedWidth(200)
+        self.setFixedSize(400, 600)
 
-        self.setWindowTitle("My App")
+        layout = QVBoxLayout()
+        layout.addWidget(self.input)
 
-        button = QPushButton("Press Me!")
+        container = QWidget()
+        container.setLayout(layout)
 
-        self.setFixedSize(QSize(400, 300))
+        self.setCentralWidget(container)
 
-        self.setCentralWidget(button)
+    def addListItem(self):
+        items = [4, 5, 7]
+        listWidget = QListWidget(self)
+        listWidget.show()
+        listWidget.addItem(items)
+
+
 
 
 app = QApplication(sys.argv)
 
 window = MainWindow()
 window.show()
+
 app.exec()

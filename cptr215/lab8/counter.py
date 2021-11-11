@@ -65,17 +65,19 @@ class Neighbor:
 class BoundedCounter(Neighbor):
     def __init__(self, lower_bound, upper_bound, val=None):
         """
-        # >>> bit = BoundedCounter(0, 1)
-        # >>> bit == None
-        # False
-        # >>> type(bit) == BoundedCounter
-        # True
-        # >>> bit.lower_bound
-        # 0
-        # >>> bit.upper_bound
-        # 1
-        # >>> bit.current_value
-        # 0
+        >>> bit = BoundedCounter(0, 1)
+        >>> bit == None
+        False
+        >>> type(bit) == BoundedCounter
+        True
+        >>> bit.lower_bound
+        0
+        >>> bit.upper_bound
+        1
+        >>> bit = BoundedCounter(4, 9, 5)
+        >>> bit.increment()
+        >>> bit.current_value
+        6
         """
         super().__init__()
         self.lower_bound = lower_bound
@@ -113,9 +115,22 @@ class BoundedCounter(Neighbor):
     def get_value(self):
         return self.current_value
 
+    def __repr__(self):
+        return f"BoundedCounter({self.lower_bound}, {self.upper_bound}, {self.current_value})"
+
 
 class ListCounter(BoundedCounter):
     def __init__(self, items, val=None):
+        """
+        >>> bit = ListCounter([0, 1, 2, 3, 4, 5, 6, 7, 8], 4)
+        >>> bit.increment()
+        >>> bit.current_value
+        5
+        >>> bit = ListCounter([0, 1, 2, 3, 4, 6, 7, 8], 4)
+        >>> bit.increment()
+        >>> bit.get_value()
+        6
+        """
         self.items = tuple(items)
         super().__init__(0, len(self.items) - 1)
         if val is not None:
@@ -124,11 +139,23 @@ class ListCounter(BoundedCounter):
     def get_value(self):
         return self.items[super().get_value()]
 
+    def __repr__(self):
+        return f"ListCounter({self.items}, {self.current_value})"
+
 
 class FixedLengthCounter(BoundedCounter):
     def __init__(self, lo, hi, val=None, length=1):
+        """
+        >>> bit = FixedLengthCounter(0, 9, 6)
+        >>> bit.increment()
+        >>> bit.current_value
+        7
+        >>> bit = FixedLengthCounter(5, 20, 8)
+        >>> bit.increment()
+        >>> bit.current_value
+        9
+        """
         super().__init__(lo, hi)
-        # self.val = val
         self.length = length
         if val is None:
             self.current_value = lo
@@ -138,18 +165,40 @@ class FixedLengthCounter(BoundedCounter):
     def get_value(self):
         return f"{super().get_value():0{self.length}}"
 
+    def __repr__(self):
+        return f"FixedLengthCounter({self.lower_bound}, {self.upper_bound}, {self.current_value}, {self.length})"
+
 
 class StaticConnector(Neighbor):
     def __init__(self, string):
+        """
+        >>> bit = StaticConnector(":")
+        >>> bit.get_value()
+        ':'
+        >>> bit = StaticConnector("!")
+        >>> bit.get_value()
+        '!'
+        """
         super().__init__()
         self.string = string
 
     def get_value(self):
         return self.string
 
+    def __repr__(self):
+        return f"StaticConnector({self.string})"
+
 
 class Date:
     def __init__(self, y, m, d):
+        """
+        >>> bit = Date(2002, 5, 3)
+        >>> bit.next_day()
+        2002-5-4
+        >>> bit = Date(2002, 1, 31)
+        >>> bit.next_day()
+        2002-2-1
+        """
         self.y = y
         self.m = m
         self.d = d
@@ -179,6 +228,14 @@ class Date:
 
 class Clock12:
     def __init__(self, h, m, day_half="PM"):
+        """
+        >>> bit = Clock12(4, 30)
+        >>> bit.next_minute()
+        PM 4:31
+        >>> bit = Clock12(4, 59)
+        >>> bit.next_minute()
+        PM 5:00
+        """
         self.h = h
         self.m = m
         self.day_half = day_half
@@ -192,11 +249,10 @@ class Clock12:
         self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
     def __repr__(self):
-        return f"{self.hour.current_value},{self.space}{self.minute.current_value}"
+        return f"Clock12({self.hour.current_value},{self.space}{self.minute.current_value})"
 
     def __str__(self):
         return str(self.minute)
-        #return f"{self.ampm.get_value()}{self.space.get_value()}{self.hour.get_value()}{self.colon.get_value()}{self.minute.get_value()}"
 
     def next_minute(self):
         """
@@ -222,6 +278,14 @@ class Clock12:
 
 class Clock24:
     def __init__(self, h, m):
+        """
+        >>> bit = Clock24(5, 20)
+        >>> bit.next_time()
+        05:21
+        >>> bit = Clock24(5, 59)
+        >>> bit.next_time()
+        06:00
+        """
         self.h = h
         self.m = m
 
@@ -230,7 +294,7 @@ class Clock24:
         self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
     def __repr__(self):
-        return f"{self.hour.current_value}, {self.minute.current_value}"
+        return f"Clock24({self.hour.current_value}, {self.minute.current_value})"
 
     def __str__(self):
         return str(self.minute)
@@ -254,11 +318,8 @@ if __name__ == "__main__":
 
     doctest.testmod()
 
-    # bit4 = FixedLengthCounter(0, 1, 2)
-    # plus = StaticConnector("+").add_increment(bit4)
-    # bit2 = BoundedCounter(0, 1).add_increment(plus)
-    # dash = StaticConnector("-").add_increment(bit2)
-    # bit1 = BoundedCounter(0, 1).add_increment(dash)
-    # for _ in range(20):
-    #     print(bit1)
-    #     bit1.increment()
+    bit4 = FixedLengthCounter(0, 1, 2)
+    plus = StaticConnector("+").add_increment(bit4)
+    bit2 = BoundedCounter(0, 1).add_increment(plus)
+    dash = StaticConnector("-").add_increment(bit2)
+    bit1 = BoundedCounter(0, 1).add_increment(dash)
