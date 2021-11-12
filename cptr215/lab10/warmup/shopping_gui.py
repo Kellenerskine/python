@@ -1,5 +1,7 @@
 import sys
-from PySide6.QtWidgets import QApplication, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, QGroupBox, \
+from PySide6.QtGui import QFont
+from PySide6.QtWidgets import QApplication, QStyle, QLabel, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, \
+    QGroupBox, \
     QHBoxLayout, QWidget, \
     QListWidget, QListWidgetItem, QListView, QGridLayout, QPushButton
 
@@ -16,13 +18,22 @@ class MainWindow(QMainWindow):
         self.my_list = QListWidget()
 
         add_item = QPushButton("Add")
-        add_item.clicked.connect(self.addListItem())
+        add_item.clicked.connect(self.addListItem)
+
+        remove_item = QPushButton("Remove Selected Items")
+        remove_item.clicked.connect(self.removeListItem())
+
+        self.text = QLabel(text="Shopping List")
+        self.text.setIndent(150)
+        self.text.setFont(QFont("Times", weight=QFont.Bold))
+        self.text.show()
 
         layout = QGridLayout()
-        layout.setColumnStretch(1, 4)
-        layout.setColumnStretch(2, 4)
-        layout.addWidget(self.input, 0, 0)
-        layout.addWidget(add_item, 0, 3)
+        layout.addWidget(self.text, 0, 0)
+        layout.addWidget(self.input, 1, 0)
+        layout.addWidget(add_item, 1, 1)
+
+        layout.addWidget(self.my_list, 3, 0)
 
         container = QWidget()
         container.setLayout(layout)
@@ -33,7 +44,6 @@ class MainWindow(QMainWindow):
         item = self.input.text()
         self.my_list.addItem(item)
         self.input.setText("")
-        print("clicked")
 
     def removeListItem(self):
         pass
@@ -45,3 +55,5 @@ window = MainWindow()
 window.show()
 
 app.exec()
+
+# TODO: focus cursor on text box for next item
