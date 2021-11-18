@@ -82,18 +82,19 @@ class BoundedCounter(Neighbor):
         super().__init__()
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
-        self.current_value = self.lower_bound
+        # self.current_value = self.lower_bound
+
 
         if self.current_value is not None:
             self.current_value = val
         else:
-            self.current_value = lower_bound
+            self.current_value = self.lower_bound
 
     def increment(self):
         """
         >>> digit = BoundedCounter(0, 9)
         >>> digit.increment()
-        >>> digit.current_value
+        >>> digit.current_value()
         1
         >>> for _ in range(8): digit.increment()
         >>> digit.get_value()
@@ -315,11 +316,18 @@ class Clock24:
 
 if __name__ == "__main__":
     import doctest
-
+#
+#         #demo for Date:
+#     print("12hr or 24hr?")
+#     time_mode = input("which format would you like?")
+#     if time_mode == "12hr":
+#         time_initial = input("Enter in the following format: hours,minutes,'AM/PM'")
+#         time_lst = time_initial.split(" ")
+#         result = Clock12(int(time_lst[0]), int(time_lst[1]))
+#         print(result.next_minute())
+#         # print(f"The next minute is: {result.next_minute()}")
+#
+#
     doctest.testmod()
 
-    bit4 = FixedLengthCounter(0, 1, 2)
-    plus = StaticConnector("+").add_increment(bit4)
-    bit2 = BoundedCounter(0, 1).add_increment(plus)
-    dash = StaticConnector("-").add_increment(bit2)
-    bit1 = BoundedCounter(0, 1).add_increment(dash)
+
