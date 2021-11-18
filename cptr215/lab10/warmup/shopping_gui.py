@@ -2,7 +2,7 @@ import sys
 import atexit
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QStyle, QLabel, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, \
+from PySide6.QtWidgets import QApplication, QMessageBox, QDialog, QStyle, QLabel, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, \
     QGroupBox, \
     QHBoxLayout, QWidget, \
     QListWidget, QListWidgetItem, QListView, QGridLayout, QPushButton
@@ -21,6 +21,13 @@ class MainWindow(QMainWindow):
         self.my_list.setSelectionMode(QtWidgets.QAbstractItemView.MultiSelection)
         self.my_list.setSortingEnabled(True)
 
+        file = open("file.txt", "r")
+        str(file).strip()
+        for i in file:
+            self.my_list.addItem(str(i))
+
+        file.close()
+
         add_item = QPushButton("Add")
         add_item.clicked.connect(self.addListItem)
 
@@ -32,8 +39,6 @@ class MainWindow(QMainWindow):
         self.text.setFont(QFont("Times", weight=QFont.Bold))
         self.text.show()
 
-        #TODO: TEST
-        # QMainWindow.aboutToQuit.connect(self.closeEvent)
 
         layout = QGridLayout()
         layout.addWidget(self.text, 0, 0)
@@ -47,24 +52,37 @@ class MainWindow(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
+        self.yes_button = QPushButton("Yes")
+        self.no_button = QPushButton("No")
+
     def addListItem(self):
         # takes content of box
         item = self.input.text()
-        self.my_list.addItem(item)
+        self.my_list.addItem(item + "\n")
         self.input.setText("")
 
     def removeListItem(self):
-        list_items = self.my_list.selectedItems()
-        if not list_items: return
-        for item in list_items:
-            self.my_list.takeItem(self.my_list.row(item))
+        dlg = QMessageBox(self)
+        dlg.setFixedWidth(100)
+        dlg.setText("Remove selected items?")
+        dlg.setStandardButtons(QMessageBox.No | QMessageBox.Yes)
+        button = dlg.exec()
+        if button == QMessageBox.Yes:
+            list_items = self.my_list.selectedItems()
+            if not list_items: return
+            for item in list_items:
+                self.my_list.takeItem(self.my_list.row(item))
 
     def closeEvent(self, _):
         file = open("file.txt", "r+")
-        for i in file:
-            i = ""
-        for i in self.my_list:
-            file.write(list.item(i))
+        file.truncate(0)
+        items = []
+        for index in range(self.my_list.count()):
+            items.append(self.my_list.item(index))
+        for i in items:
+            file.write(i.text())
+
+        file.close()
 
 
 app = QApplication(sys.argv)
