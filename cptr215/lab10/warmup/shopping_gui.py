@@ -1,4 +1,5 @@
 import sys
+import atexit
 from PySide6 import QtWidgets, QtCore
 from PySide6.QtGui import QFont
 from PySide6.QtWidgets import QApplication, QStyle, QLabel, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, \
@@ -32,7 +33,7 @@ class MainWindow(QMainWindow):
         self.text.show()
 
         #TODO: TEST
-        app.aboutToQuit.connect(self.closeEvent)
+        # QMainWindow.aboutToQuit.connect(self.closeEvent)
 
         layout = QGridLayout()
         layout.addWidget(self.text, 0, 0)
@@ -58,11 +59,12 @@ class MainWindow(QMainWindow):
         for item in list_items:
             self.my_list.takeItem(self.my_list.row(item))
 
-    # def closeEvent(self):
-    #     #Your desired functionality here
-    #     print('Close button pressed')
-    #     import sys
-    #     sys.exit(0)
+    def closeEvent(self, _):
+        file = open("file.txt", "r+")
+        for i in file:
+            i = ""
+        for i in self.my_list:
+            file.write(list.item(i))
 
 
 app = QApplication(sys.argv)
