@@ -1,7 +1,8 @@
 import sys
 from PySide6 import QtWidgets
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QMessageBox, QLabel, QMainWindow, QLineEdit, QWidget, QListWidget, QGridLayout, QPushButton
+from PySide6.QtWidgets import QApplication, QMessageBox, QLabel, QMainWindow, QLineEdit, QWidget, QListWidget, \
+    QGridLayout, QPushButton
 
 
 class MainWindow(QMainWindow):
@@ -34,7 +35,6 @@ class MainWindow(QMainWindow):
         self.text.setIndent(150)
         self.text.setFont(QFont("Times", weight=QFont.Bold))
         self.text.show()
-
 
         layout = QGridLayout()
         layout.addWidget(self.text, 0, 0)
@@ -88,3 +88,6 @@ window = MainWindow()
 window.show()
 
 app.exec()
+
+# TODO: enter key should input text
+# TODO: change the list widget and remove button to fill entire window
