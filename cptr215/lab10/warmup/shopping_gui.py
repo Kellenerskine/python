@@ -1,11 +1,7 @@
 import sys
-import atexit
-from PySide6 import QtWidgets, QtCore
+from PySide6 import QtWidgets
 from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QApplication, QMessageBox, QDialog, QStyle, QLabel, QListWidgetItem, QMainWindow, QLineEdit, QVBoxLayout, \
-    QGroupBox, \
-    QHBoxLayout, QWidget, \
-    QListWidget, QListWidgetItem, QListView, QGridLayout, QPushButton
+from PySide6.QtWidgets import QApplication, QMessageBox, QLabel, QMainWindow, QLineEdit, QWidget, QListWidget, QGridLayout, QPushButton
 
 
 class MainWindow(QMainWindow):
@@ -22,9 +18,9 @@ class MainWindow(QMainWindow):
         self.my_list.setSortingEnabled(True)
 
         file = open("file.txt", "r")
-        str(file).strip()
         for i in file:
-            self.my_list.addItem(str(i))
+            string = i.strip()
+            self.my_list.addItem(string)
 
         file.close()
 
@@ -58,7 +54,7 @@ class MainWindow(QMainWindow):
     def addListItem(self):
         # takes content of box
         item = self.input.text()
-        self.my_list.addItem(item + "\n")
+        self.my_list.addItem(item)
         self.input.setText("")
 
     def removeListItem(self):
@@ -81,6 +77,7 @@ class MainWindow(QMainWindow):
             items.append(self.my_list.item(index))
         for i in items:
             file.write(i.text())
+            file.write("\n")
 
         file.close()
 
@@ -91,10 +88,3 @@ window = MainWindow()
 window.show()
 
 app.exec()
-
-# TODO: focus cursor on text box for next item
-# TODO: sort the items by alph - done
-# TODO: enable multiselect - done
-# TODO: remove items that are selected with button
-# TODO: require a popup confirmation to exit app
-# TODO: save all changes to a file
