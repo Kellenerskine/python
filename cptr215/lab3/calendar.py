@@ -36,9 +36,12 @@ def leap_year_check(year):
         return False
 
 
-user_input = input().split()  # bring in month and year
-user_month = int(user_input[0])  # user inputted month
-user_year = int(user_input[1])  # user inputted year
+# user_input = input().split()  # bring in month and year
+# user_month = int(user_input[0])  # user inputted month
+# user_year = int(user_input[1])  # user inputted year
+
+user_month = 5
+user_year = 2100
 
 
 start_day_num = (day_of_week_num(user_year, user_month)) - 1
@@ -52,11 +55,11 @@ num_days_dict = {
         5: 31,
         6: 30,
         7: 31,
-        8: 30,
-        9: 31,
-        10: 30,
-        11: 31,
-        12: 30
+        8: 31,
+        9: 30,
+        10: 31,
+        11: 30,
+        12: 31
     }
 
 if leap_year_check(user_year) and user_month == 2:  # finds how many days in month if leap year
@@ -72,13 +75,19 @@ month_name_list = (
 # the generic header text for the calendar
 month_name_out = month_name_list[user_month]
 header = (month_name_out + " " + str(user_year))
-if user_month == 1:
-    print("   ", header)
-else:
-    print("  ", header)
-# gets the month name
-# print(str(header).center(20))  # centers the month name
 
+# gets the month name and centers it
+str(header).center(20)
+k = 0
+my_string = str(header).center(20)
+left_filler = ""
+for i in my_string:
+    k += 1
+    if i != " ":
+        left_filler = (k-2) * " "
+        break
+
+print(left_filler, str(header))
 print("Su", "Mo", "Tu", "We", "Th", "Fr", "Sa")  # prints the day names
 
 rand_counter = 0
@@ -114,7 +123,7 @@ for day in range(1, num_days_in_month+1):
             print("", day, "", end='')
     elif day < 10 and space_count == 1:
         if count == 0:
-            print(day, end='')
+            print("", day, end='')
         else:
             print("", day, "", end='')
     else:
@@ -128,8 +137,7 @@ for day in range(1, num_days_in_month+1):
 
 if rand_counter == 1:
     count += 1
+    print()
 else:
-    print()
-    print()
-
-# 3. write tests
+    print("")
+    print("")
