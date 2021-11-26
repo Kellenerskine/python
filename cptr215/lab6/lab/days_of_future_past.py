@@ -105,8 +105,9 @@ class Date:
         else:
             return Date(self.year, self.month, self.day - 1)
 
+
     def next_day(self):
-        """input a date and output the day before
+        """input a date and output the day after
         >>> Date(2021, 9, 20).next_day()
         Date(2021, 9, 21)
         >>> Date(2021, 2, 28).next_day()
@@ -190,7 +191,30 @@ class Date:
         else:
             return False
 
-    def offset(self):
+    def Offset(self, offset):
+        """
+        >>> Date(2021, 5, 8).Offset(-3)
+        Date(2021, 5, 5)
+        >>> Date(2021, 5, 8).Offset(3)
+        Date(2021, 5, 11)
+        >>> Date(2021, 5, 20).Offset(22)
+        Date(2021, 6, 11)
+        """
+
+        new_date = Date(self.year, self.month, self.day)
+
+        if offset > 0:
+            for i in range(offset):
+                new_date = new_date.next_day()
+        else:
+            for i in range(abs(offset)):
+                new_date = new_date.previous_day()
+        return new_date
+
+    def distance(self):
+        pass
+
+    def comparison(self):
         pass
 
 
@@ -198,3 +222,7 @@ if __name__ == "__main__":
     import doctest
 
     doctest.testmod()
+
+# test = Date(2021, 8, 27)
+# test.offset(5)
+# print(test)
