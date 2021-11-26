@@ -138,9 +138,13 @@ def daysInMonth(month, year):
         num_days_in_month = num_days_dict[month]
     return num_days_in_month
 
-def startDayNum(month, year):
-    start_day_num = (day_of_week_num(year, month)) - 1
-    return start_day_num + 1
+
+def startingDayOfWeek(month, year):
+    start_day_num = (day_of_week_num(year, month))
+    if start_day_num == 0:
+        start_day_num = 7
+    return start_day_num
+
 
 def monthCalendarFor(month, year):
     result = ""
@@ -180,6 +184,10 @@ def monthCalendarFor(month, year):
     if start_day_num < 0:
         start_day_num = 6
         rand_counter = 1
+    if start_day_num == 0:
+        start_day_num = 0
+        rand_counter = 3
+
     count = 7 - start_day_num
     space_count = 0
     result += " "
@@ -221,19 +229,22 @@ def monthCalendarFor(month, year):
                     result += (str(day) + "  ")
 
     if rand_counter == 1:
-        count += 1
-        result += f"\n"
+        result += "\n"
+    elif rand_counter == 3:
+        result += "\n"
+        result += "\n"
+        result += "\n"
     else:
-        result += f"\n"
-        result += f"\n"
+        result += "\n"
+        result += "\n"
 
     return result
 
-
-# user_input = input().split()  # bring in month and year
-# user_month = int(user_input[0])  # user inputted month
-# user_year = int(user_input[1])  # user inputted year
-# calendar(5, 2002)
+# TESTS:
+# print(calendar(5, 2002))
 # print(startDayNum(5, 2002))
-print(monthCalendarFor(5, 2002))
-
+# print(monthCalendarFor(1, 2000))
+# print(startingDayOfWeek(1, 2000))
+# print(monthCalendarFor(2, 1981))
+# for x in range(1, 7):
+#     print(startingDayOfWeek(x, 2000))
