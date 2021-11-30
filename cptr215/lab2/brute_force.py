@@ -1,20 +1,23 @@
-# Read in first equation, ax + by = c
+# first equation, ax + by = c
 a = int(input())
 b = int(input())
 c = int(input())
 
-# Read in second equation, dx + ey = f
+# second equation, dx + ey = f
 d = int(input())
 e = int(input())
 f = int(input())
 
-# Type your code here.
-for x in range(-10, 11):
-    for y in range(-10, 11):
+no_sol = True
 
+for x in range(-10, 10):
+    for y in range(-10, 10):
         g = a * x + b * y
         h = d * x + e * y
         if c == g and f == h:
-            print("x = {} , y = {}".format(g, h))
-        else:
-            print("There is no solution.")
+            print(f"x = {x} , y = {y}")
+            no_sol = False
+
+if no_sol:
+    print("There is no solution")
+
