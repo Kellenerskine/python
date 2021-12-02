@@ -82,7 +82,7 @@ class BoundedCounter(Neighbor):
         super().__init__()
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
-        # self.current_value = self.lower_bound
+        self.current_value = self.lower_bound
 
 
         if self.current_value is not None:
@@ -316,18 +316,30 @@ class Clock24:
 
 if __name__ == "__main__":
     import doctest
-#
-#         #demo for Date:
-#     print("12hr or 24hr?")
-#     time_mode = input("which format would you like?")
-#     if time_mode == "12hr":
-#         time_initial = input("Enter in the following format: hours,minutes,'AM/PM'")
-#         time_lst = time_initial.split(" ")
-#         result = Clock12(int(time_lst[0]), int(time_lst[1]))
-#         print(result.next_minute())
-#         # print(f"The next minute is: {result.next_minute()}")
-#
-#
+
+    #demo for Date:
+    print("12hr or 24hr or Date?")
+    time_mode = input("which format would you like?")
+    if time_mode == "12hr":
+        time_initial = input("Enter in the following format: hours,minutes,'AM/PM'   ")
+        time_lst = time_initial.split(",")
+        result = Clock12(int(time_lst[0]), int(time_lst[1]), time_lst[2].upper())
+        print("The next minute is: ", end='')
+        result.next_minute()
+    elif time_mode == "24hr":
+        time_initial = input("Enter in the following format: hour,minute   ")
+        time_lst = time_initial.split(",")
+        result = Clock24(int(time_lst[0]), int(time_lst[1]))
+        print("The next minute is: ")
+        result.next_time()
+    elif time_mode == "date":
+        date_initial = input("Enter in the following format: year,month,day   ")
+        date_lst = date_initial.split(",")
+        result = Date(int(date_lst[0]), int(date_lst[1]), int(date_lst[2]))
+        print("The next day is: ", end='')
+        result.next_day()
+
+
     doctest.testmod()
 
 
