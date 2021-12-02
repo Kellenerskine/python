@@ -1,11 +1,3 @@
-# To Do:
-# TODO: finish SC constructor DONE
-# TODO: add starting value parameter to BC, LC, EC, & FLC DONE
-# TODO: match existing classes to class diagram
-# TODO: create EnumCounter (?), Date, Clock12, and Clock24 classes
-# TODO: doctests
-
-
 class Neighbor:
     """Neighbor represents an object that can:
     1) Connect to one or more neighbors (and be connected to also), and
@@ -83,7 +75,6 @@ class BoundedCounter(Neighbor):
         self.lower_bound = lower_bound
         self.upper_bound = upper_bound
         self.current_value = self.lower_bound
-
 
         if self.current_value is not None:
             self.current_value = val
@@ -314,10 +305,11 @@ class Clock24:
         print(self)
 
 
+# Demo
 if __name__ == "__main__":
     import doctest
 
-    #demo for Date:
+    # demo for Date:
     print("12hr or 24hr or Date?")
     time_mode = input("which format would you like?")
     if time_mode == "12hr":
@@ -339,7 +331,4 @@ if __name__ == "__main__":
         print("The next day is: ", end='')
         result.next_day()
 
-
     doctest.testmod()
-
-
