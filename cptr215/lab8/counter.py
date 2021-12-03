@@ -132,7 +132,7 @@ class ListCounter(BoundedCounter):
         return self.items[super().get_value()]
 
     def __repr__(self):
-        return f"ListCounter({self.items}, {self.current_value})"
+        return f"ListCounter({self.items}, {self.get_value()})"
 
 
 class FixedLengthCounter(BoundedCounter):
@@ -147,12 +147,8 @@ class FixedLengthCounter(BoundedCounter):
         >>> bit.current_value
         9
         """
-        super().__init__(lo, hi)
+        super().__init__(lo, hi, val)
         self.length = length
-        if val is None:
-            self.current_value = lo
-        else:
-            self.current_value = val
 
     def get_value(self):
         return f"{super().get_value():0{self.length}}"
@@ -203,10 +199,10 @@ class Date:
         self.day = BoundedCounter(1, months[m], d).add_increment(self.month)
 
     def __repr__(self):
-        return f"{self.day.current_value}, {self.month.current_value}, {self.year.current_value}"
+        return f"Date({self.year.get_value()}, {self.month.get_value()}, {self.day.get_value()})"
 
     def __str__(self):
-        return f"{self.year.current_value}-{self.month.current_value + 1}-{self.day.current_value}"
+        return f"{self.year.get_value()}-{self.month.get_value()}-{self.day.get_value()}"
 
     def next_day(self):
         """
