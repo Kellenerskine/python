@@ -19,7 +19,6 @@ class MainWindow(QMainWindow):
 
         # creates a textbox that can be typed in
         self.input = QLineEdit()
-        self.input.setFixedWidth(300)
 
         # creates button that calls the addListItem function when clicked
         add_item = QPushButton("Search")
@@ -31,23 +30,34 @@ class MainWindow(QMainWindow):
         self.text.setFont(QFont("Times", weight=QFont.Bold))
         self.text.show()
 
+        self.version_selector = QLabel(text="Versions: ")
+        self.book_selector = QLabel(text="Books: ")
+        self.chapter_selector = QLabel(text="Chapters: ")
+
         self.version = QComboBox()
         self.version.addItems(["NIV", "KJV", "NKJV", "MSG"])
-        self.version.currentIndexChanged.connect(self.selection_change)
+        self.version.currentIndexChanged.connect(self.version_select)
 
         # creates an instance of QGridLayout which can be used to position widgets within a window
         layout = QGridLayout()
         # adding widgets with specific positions
-        layout.addWidget(self.version, 0, 1)
-        layout.addWidget(self.text, 0, 0)
-        layout.addWidget(self.input, 1, 0)
-        layout.addWidget(add_item, 1, 1)
+        layout.addWidget(self.text, 1, 0)
+        layout.addWidget(self.version_selector, 2, 0)
+        layout.addWidget(self.version, 2, 1)
+        layout.addWidget(self.book_selector, 3, 0)
+        # layout.addWidget(self.book, 3, 1)
+        # layout.addWidget(self.)
+
+        # TODO: add the rest of the drop downs
+
+        layout.addWidget(self.input, 3, 0)
+        layout.addWidget(add_item, 3, 1)
 
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
 
-    def selection_change(self, i):
+    def version_select(self, i):
         print("Items in the list are: ")
 
         for count in range(self.version.count()):
