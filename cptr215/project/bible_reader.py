@@ -3,9 +3,6 @@ from PySide6.QtGui import QFont
 from PySide6.QtWidgets import *
 from bs4 import BeautifulSoup
 
-
-# QApplication, QLabel, QMainWindow, QLineEdit, QWidget, QListWidget, QGridLayout, QPushButton
-
 # TODO: add chapter size to books in dict
 # TODO: grab values from drop downs and edit URL accordingly
 # TODO: make the GUI more attractive
@@ -44,13 +41,10 @@ class MainWindow(QMainWindow):
         self.search_word = QLabel(text="Search word here: ")
         self.filler = QLabel(text="Number of times the word appears: ")
 
-        # self.stats = QLabel(text=stats)
-
         # adds the version selector dropdown
         self.version = QComboBox()
         self.version.addItems(["NIV", "KJV", "NKJV", "MSG", "MEV", "NLV", "TLB"])
         # TODO: un-needed unless i start to include versions with different books
-        # self.version.currentIndexChanged.connect(self.version_changed)
 
         # adds the book selector drop down
         self.book_dict = {
@@ -129,7 +123,6 @@ class MainWindow(QMainWindow):
 
         # adds the chapter selector drop down
         self.chapter = QComboBox()
-        # self.book.currentIndexChanged.connect(self.chapter_changed)
 
         # creates an instance of QGridLayout which can be used to position widgets within a window
         layout = QGridLayout()
@@ -173,7 +166,7 @@ class MainWindow(QMainWindow):
             text += i.get_text()
 
         # counts the number of occurrences of given search word
-        self.num_times = text.upper().count(self.input.text().upper(), 0, (text.find("Holy Bible", 0, len(text))))
+        self.num_times = text.upper().count(" " + self.input.text().upper() + " ", 0, (text.find("Holy Bible", 0, len(text))))
         self.filler.setText(f"Number of times the word appears: {self.num_times}")
 
 
