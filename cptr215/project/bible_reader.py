@@ -35,7 +35,6 @@ class MainWindow(QMainWindow):
         # adds the version selector dropdown
         self.version = QComboBox()
         self.version.addItems(["NIV", "KJV", "NKJV", "MSG", "MEV", "NLV", "TLB"])
-        # TODO: un-needed unless i start to include versions with different books
 
         # adds the book selector drop down
         self.book_dict = {
