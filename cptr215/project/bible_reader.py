@@ -1,16 +1,13 @@
+import time
+import random
 import requests
-from PySide6.QtGui import QFont
 from PySide6.QtWidgets import *
 from bs4 import BeautifulSoup
 
-# TODO: add chapter size to books in dict
-# TODO: grab values from drop downs and edit URL accordingly
-# TODO: make the GUI more attractive
 
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
         self.book_chosen = ""
         self.chapter_chosen = ""
         self.version_chosen = ""
@@ -18,7 +15,7 @@ class MainWindow(QMainWindow):
 
         # sets a window of fixed size for the app
         self.setWindowTitle("Bible Statistics")
-        self.setFixedSize(500, 300)
+        self.setFixedSize(500, 200)
 
         # creates a textbox that can be typed in
         self.input = QLineEdit()
@@ -27,13 +24,7 @@ class MainWindow(QMainWindow):
         search = QPushButton("Search")
         search.clicked.connect(self.search_bible)
 
-        # stats = "random stuff"
-
         # this section of code creates a title for the app and makes the app visible
-        self.text = QLabel(text="Bible Statistics")
-        self.text.setIndent(150)
-        self.text.setFont(QFont("Times", weight=QFont.Bold))
-        self.text.show()
 
         self.version_selector = QLabel(text="Versions: ")
         self.book_selector = QLabel(text="Books: ")
@@ -48,6 +39,7 @@ class MainWindow(QMainWindow):
 
         # adds the book selector drop down
         self.book_dict = {
+            "N/A": 0,
             "Genesis": 50,
             "Exodus": 40,
             "Leviticus": 27,
@@ -127,7 +119,6 @@ class MainWindow(QMainWindow):
         # creates an instance of QGridLayout which can be used to position widgets within a window
         layout = QGridLayout()
         # adding widgets with specific positions
-        layout.addWidget(self.text, 0, 0)
         layout.addWidget(self.version_selector, 1, 0)
         layout.addWidget(self.version, 1, 1)
         layout.addWidget(self.book_selector, 2, 0)
@@ -139,34 +130,45 @@ class MainWindow(QMainWindow):
         layout.addWidget(self.search_word, 5, 0)
         layout.addWidget(search, 6, 1)
         layout.addWidget(self.filler, 8, 0)
-        # layout.addWidget(self.stats, 7, 0)
 
         container = QWidget()
         container.setLayout(layout)
         self.setCentralWidget(container)
 
     def book_changed(self, i):
+        self.whole_book_search = i
         self.chapter.clear()
-        dict_values_list = list(self.book_dict.values())
-        print(dict_values_list[i])
-        num_chapters = dict_values_list[i]
-        for i in range(1, num_chapters+1):
+        self.dict_values_list = list(self.book_dict.values())
+        self.num_chapters = self.dict_values_list[i]
+        self.chapter.addItem("N/A")
+        for i in range(1, self.num_chapters + 1):
             self.chapter.addItem(str(i))
-        print(self.book.currentText())
-        print(num_chapters)
+        print(self.book.currentText() + "test ")
+        print(self.num_chapters)
 
     def search_bible(self):
         # this function should scrape the website for the specified text
+        x = ""
+        if self.dict_values_list[self.whole_book_search + 1] == "N/A":
+            for i in range(1, self.num_chapters + 1):
+                x = requests.get(
+                    f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{i}&version={self.version.currentText()}")
+                a = time.perf_counter()
+                time.sleep(random.randrange(2, 5))
+                b = time.perf_counter()
+                print(f"Search took {b - a} seconds.")
 
-        x = requests.get(
-            f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{self.chapter.currentText()}&version={self.version.currentText()}")
+        else:
+            x = requests.get(
+                f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{self.chapter.currentText()}&version={self.version.currentText()}")
         soup = BeautifulSoup(x.content, "html.parser")
         text = ""
         for i in soup.find_all("p"):
             text += i.get_text()
 
         # counts the number of occurrences of given search word
-        self.num_times = text.upper().count(" " + self.input.text().upper() + " ", 0, (text.find("Holy Bible", 0, len(text))))
+        self.num_times = text.upper().count(" " + self.input.text().upper() + " ", 0,
+                                            (text.find("Holy Bible", 0, len(text))))
         self.filler.setText(f"Number of times the word appears: {self.num_times}")
 
 
@@ -177,5 +179,8 @@ window.show()
 
 app.exec()
 
-# TODO: Bugslist:
-# currently increments if part of the word is present eg: good in goodbye
+# TODO: add results area in gui
+# TODO: add phrase search option
+# TODO: make one option disappear if the other is chosen
+# TODO: different button for each search
+# TODO: countdown timer for search of whole book

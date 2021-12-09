@@ -108,6 +108,11 @@ class BoundedCounter(Neighbor):
         return self.current_value
 
     def __repr__(self):
+        """
+        >>> variable = BoundedCounter(5, 29, 7)
+        >>> variable.__repr__()
+        'BoundedCounter(5, 29, 7)'
+        """
         return f"BoundedCounter({self.lower_bound}, {self.upper_bound}, {self.current_value})"
 
 
@@ -132,7 +137,12 @@ class ListCounter(BoundedCounter):
         return self.items[super().get_value()]
 
     def __repr__(self):
-        return f"ListCounter({self.items}, {self.get_value()})"
+        """
+        >>> variable = ListCounter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)
+        >>> variable.__repr__()
+        'ListCounter([1, 2, 3, 4, 5, 6, 7, 8, 9, 10], 5)'
+        """
+        return f"ListCounter([{self.items}], {self.get_value()})"
 
 
 class FixedLengthCounter(BoundedCounter):
@@ -154,6 +164,11 @@ class FixedLengthCounter(BoundedCounter):
         return f"{super().get_value():0{self.length}}"
 
     def __repr__(self):
+        """
+        >>> variable = FixedLengthCounter(2, 9, 4)
+        >>> variable.__repr__()
+        'FixedLengthCounter(2, 9, 4, 1)'
+        """
         return f"FixedLengthCounter({self.lower_bound}, {self.upper_bound}, {self.current_value}, {self.length})"
 
 
@@ -174,7 +189,15 @@ class StaticConnector(Neighbor):
         return self.string
 
     def __repr__(self):
-        return f"StaticConnector({self.string})"
+        """
+        >>> connector = StaticConnector(":")
+        >>> connector.get_value()
+        ':'
+        >>> connector = StaticConnector(",")
+        >>> repr(connector)
+        'StaticConnector(",")'
+        """
+        return f"""StaticConnector("{self.string}")"""
 
 
 class Date:
@@ -199,10 +222,20 @@ class Date:
         self.day = BoundedCounter(1, months[m], d).add_increment(self.month)
 
     def __repr__(self):
+        """
+        >>> date = Date(2002, 4, 5)
+        >>> date.__repr__()
+        'Date(2002, 4, 5)'
+        """
         return f"Date({self.year.get_value()}, {self.month.get_value()}, {self.day.get_value()})"
 
     def __str__(self):
-        return f"{self.year.get_value()}-{self.month.get_value()}-{self.day.get_value()}"
+        """
+        >>> date = Date(2002, 4, 5)
+        >>> date.__str__()
+        '2002-04-05'
+        """
+        return f"{self.year.get_value()}-{self.month.get_value():02}-{self.day.get_value():02}"
 
     def next_day(self):
         """
@@ -236,10 +269,15 @@ class Clock12:
         # self.minute = BoundedCounter(0, 59, m).add_increment(self.colon)
         self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
-    def __repr__(self):
-        return f"Clock12({self.hour.current_value},{self.space}{self.minute.current_value})"
+    # def __repr__(self):
+    #     return f"Clock12({self.hour.current_value},{self.space}{self.minute.current_value})"
 
     def __str__(self):
+        """
+        >>> variable = Clock12(5, 6)
+        >>> variable.__str__()
+        'PM 5:06'
+        """
         return str(self.minute)
 
     def next_minute(self):
@@ -281,10 +319,15 @@ class Clock24:
         self.colon = StaticConnector(":").add_increment(self.hour)
         self.minute = FixedLengthCounter(0, 59, m, 2).add_increment(self.colon)
 
-    def __repr__(self):
-        return f"Clock24({self.hour.current_value}, {self.minute.current_value})"
+    # def __repr__(self):
+    #     return f"Clock24({self.hour.current_value}, {self.minute.current_value})"
 
     def __str__(self):
+        """
+        >>> variable = Clock24(6, 9)
+        >>> variable.__str__()
+        '06:09'
+        """
         return str(self.minute)
         # return f"{self.hour.get_value()}{self.colon.get_value()}{self.minute.get_value()}"
 
