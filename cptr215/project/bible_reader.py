@@ -46,13 +46,15 @@ class MainWindow(QMainWindow):
         self.filler = QLabel(text="Number of times the word appears: ")
 
         # self.stats = QLabel(text=stats)
+
         # adds the version selector dropdown
         self.version = QComboBox()
-        self.version.addItems(["NIV", "KJV", "NKJV", "MSG"])
-        # self.version.currentIndexChanged.connect(self.version_select)
+        self.version.addItems(["NIV", "KJV", "NKJV", "MSG", "MEV", "NLV", "TLB"])
+        # TODO: un-needed unless i start to include versions with different books
+        # self.version.currentIndexChanged.connect(self.version_changed)
 
         # adds the book selector drop down
-        books = {
+        self.book_dict = {
             "Genesis": 50,
             "Exodus": 40,
             "Leviticus": 27,
@@ -120,17 +122,15 @@ class MainWindow(QMainWindow):
             "Jude": 1,
             "Revelation": 22
         }
-
         self.book = QComboBox()
-        for i in books.keys():
+
+        for i in self.book_dict:
             self.book.addItem(i)
-        print(self.book)
+        self.book.currentIndexChanged.connect(self.book_changed)
 
         # adds the chapter selector drop down
         self.chapter = QComboBox()
-        # TODO: add a loop to populate the dropdown with proper amount of chapters
-        self.chapter.addItems(["1", "2", "3", "4", "5"])
-        # self.book.currentIndexChanged.connect(self.chapter_select)
+        # self.book.currentIndexChanged.connect(self.chapter_changed)
 
         # creates an instance of QGridLayout which can be used to position widgets within a window
         layout = QGridLayout()
@@ -153,8 +153,19 @@ class MainWindow(QMainWindow):
         container.setLayout(layout)
         self.setCentralWidget(container)
 
+    def book_changed(self, i):
+        self.chapter.clear()
+        dict_values_list = list(self.book_dict.values())
+        print(dict_values_list[i])
+        num_chapters = dict_values_list[i]
+        for i in range(1, num_chapters+1):
+            self.chapter.addItem(str(i))
+        print(self.book.currentText())
+        print(num_chapters)
+
     def search_bible(self):
         # this function should scrape the website for the specified text
+
         x = requests.get(
             f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{self.chapter.currentText()}&version={self.version.currentText()}")
         soup = BeautifulSoup(x.content, "html.parser")
@@ -167,7 +178,7 @@ class MainWindow(QMainWindow):
         self.filler.setText(f"Number of times the word appears: {self.num_times}")
 
 
-app = QApplication(sys.argv)
+app = QApplication()
 
 window = MainWindow()
 window.show()
