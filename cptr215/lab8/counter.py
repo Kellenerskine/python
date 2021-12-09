@@ -347,6 +347,7 @@ class Clock24:
 # Demo
 if __name__ == "__main__":
     import doctest
+    doctest.testmod()
 
     # demo for Date:
     print("12hr or 24hr or Date?")
@@ -370,4 +371,4 @@ if __name__ == "__main__":
         print("The next day is: ", end='')
         result.next_day()
 
-    doctest.testmod()
+
