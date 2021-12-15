@@ -11,9 +11,12 @@ class MainWindow(QMainWindow):
         self.version_chosen = ""
         self.num_times = 0
 
+        app.setStyleSheet("QLabel{font-size: 30pt;} QComboBox{font-size: 20pt;}")
+        # app.setStyleSheet("QComboBox{font-size: 20pt;}")
+
         # sets a window of fixed size for the app
         self.setWindowTitle("Bible Statistics")
-        self.setFixedSize(500, 200)
+        self.setFixedSize(800, 500)
 
         # creates a textbox that can be typed in
         self.input = QLineEdit()
@@ -152,6 +155,7 @@ class MainWindow(QMainWindow):
         self.num_times = text.upper().count(" " + self.input.text().upper() + " ", 0,
                                             (text.find("Holy Bible", 0, len(text))))
         self.filler.setText(f"Number of times the word appears: {self.num_times}")
+        print("")
 
 
 app = QApplication()
