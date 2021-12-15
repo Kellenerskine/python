@@ -1,8 +1,5 @@
-import time
-import random
 import requests
 from PySide6.QtWidgets import *
-from PySide6.QtGui import *
 from bs4 import BeautifulSoup
 
 
