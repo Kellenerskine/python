@@ -18,11 +18,6 @@ class MainWindow(QMainWindow):
         self.setWindowTitle("Bible Statistics")
         self.setFixedSize(500, 200)
 
-        color = QColor(0, 0, 0)
-
-
-
-
         # creates a textbox that can be typed in
         self.input = QLineEdit()
 
@@ -141,7 +136,6 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def book_changed(self, i):
-        self.whole_book_search = i
         self.chapter.clear()
         self.dict_values_list = list(self.book_dict.values())
         self.num_chapters = self.dict_values_list[i]
@@ -150,32 +144,12 @@ class MainWindow(QMainWindow):
             self.chapter.addItem(str(i))
 
     def search_bible(self):
-        # this function should scrape the website for the specified text
-        x = ""
-        total_text = ""
-        search_count = 0
-        whole_book_search = False
-        if self.whole_book_search == 1:
-            whole_book_search = True
-            for i in range(1, self.num_chapters + 1):
-                x = requests.get(
-                    f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{i}&version={self.version.currentText()}")
-                total_text += x
-                time.sleep(random.randrange(3, 5))
-                search_count += 1
-                print(f"Searched {search_count} times.")
-
-        else:
-            x = requests.get(
-                f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{self.chapter.currentText()}&version={self.version.currentText()}")
-
-        if whole_book_search == True:
-            soup = BeautifulSoup(x.content, "html.parser")
-            text = ""
-            for i in soup.find_all("p"):
-                text += i.get_text()
-        else:
-
+        x = requests.get(
+            f"https://www.biblegateway.com/passage/?search={self.book.currentText()}+{self.chapter.currentText()}&version={self.version.currentText()}")
+        soup = BeautifulSoup(x.content, "html.parser")
+        text = ""
+        for i in soup.find_all("p"):
+            text += i.get_text()
 
         # counts the number of occurrences of given search word
         self.num_times = text.upper().count(" " + self.input.text().upper() + " ", 0,
@@ -189,8 +163,3 @@ window = MainWindow()
 window.show()
 
 app.exec()
-
-# TODO: add phrase search option
-# TODO: make one option disappear if the other is chosen
-# TODO: different button for each search
-# TODO: countdown timer for search of whole book
