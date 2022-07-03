@@ -39,13 +39,14 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(container)
 
     def count_hours(self):
-        game_modes = ["playlist=competitive&", "playlist=deathmatch&", "playlist=escalation&", "playlist=spikerush&", "playlist=replication&", "playlist=snowball&", ""]
+        game_modes = ["playlist=competitive&", "playlist=deathmatch&", "playlist=escalation&", "playlist=spikerush&",
+                      "playlist=replication&", "playlist=snowball&", ""]
 
         tot_hours = 0
 
         for i in game_modes:
-            doc = f"https://tracker.gg/valorant/profile/riot/{str(self.input_username.text())}%23{str(self.input_tag.text())}/overview?{i}season=all"
-
+            doc = f"https://tracker.gg/valorant/profile/riot/{str(self.input_username.text())}%23{str(self.input_tag.text())}/overview?season=all"
+            # https://tracker.gg/valorant/profile/riot/Relzwit%2324601/overview?season=all
             res = requests.get(doc)
 
             soup = BeautifulSoup(res.content, "html.parser")
@@ -70,6 +71,7 @@ class MainWindow(QMainWindow):
                 tot_hours += ((hours * 60) + minutes) / 60
             else:
                 pos_m = rand.find("m")
+                print(rand[0:pos_m])
                 minutes = int(rand[0:pos_m])
                 rand = rand.removeprefix((str(minutes) + "m"))
                 pos_s = rand.find("s")
