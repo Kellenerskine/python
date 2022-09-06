@@ -14,6 +14,15 @@
 #
 # I have also created other katas. Take a look if you enjoyed this kata!
 
-def dont_give_me_five(start,end):
+def dont_give_me_five(start, end):
     # your code here
-    return n   # amount of numbers
+    n = []
+    for i in range(start, end + 1):
+        if str(i).__contains__("5"):
+            pass
+        else:
+            n.append(i)
+    return len(n)  # amount of numbers
+
+
+print(dont_give_me_five(149, 163))
