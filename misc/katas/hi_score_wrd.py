@@ -10,4 +10,23 @@
 #
 
 def high(x):
-    # Code here
+    values = ["zero", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r",
+              "s", "t", "u", "v", "w", "x", "y", "z"]
+    highest = ""
+    highest_value = 0
+    input_list = x.split()
+    word_value = 0
+
+    for word in input_list:
+        for letter in str(word):
+            word_value += values.index(letter)
+
+        if word_value > highest_value:
+            highest_value = word_value
+            highest = word
+        word_value = 0
+
+    return highest
+
+
+print(high("man i need a taxi up to ubud"))
