@@ -10,3 +10,5 @@ message = "Hello my password is jellenae"
 
 encrypted_message = rsa.encrypt(message.encode(), public_key)
 print(encrypted_message)
+
+# i sort of want to come back to this...
