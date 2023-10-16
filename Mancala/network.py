@@ -18,14 +18,15 @@ class Network:
 
     def connect(self):
         try:
+            #change this to pickle to send objects again for mancala
             self.client.connect(self.addr)
-            return pickle.loads(self.client.recv(2048))
+            return self.client.recv(2048).decode()
         except:
             pass
 
     def send(self, data):
         try:
-            self.client.send(pickle.dumps(data))
+            self.client.send(str.encode(data))
             return pickle.loads(self.client.recv(2048))
         except socket.error as e:
             print(e)
