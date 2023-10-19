@@ -5,8 +5,27 @@ class Game:
         self.ready = False
         self.id = id
         self.moves = [None, None]
-        self.wins = [0,0]
-        self.ties = 0
+        self.wins = [0, 0]
+        self.holes = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+
+
+
+    def hole_picked(self, hole_number):
+        marbles = self.holes[hole_number]
+        next_hole = hole_number + 1
+
+        while marbles > 0:
+            if (next_hole == 6):
+                if (True):  # goal is not mine
+                    next_hole += 1  # incrementing next hole index
+            else:
+                self.holes[next_hole] += 1  # adding marble to next hole
+                next_hole += 1  # incrementing next hold index
+                marbles -= 1
+
+        self.holes[hole_number] = 0
+
+        return self.holes
 
     def get_player_move(self, p):
         """
@@ -28,24 +47,30 @@ class Game:
     def bothWent(self):
         return self.p1Went and self.p2Went
 
+
     def winner(self):
+        winner_is_p1 = False
+        winner_is_p2 = False
+        game_is_ongoing = True
 
         p1 = self.moves[0].upper()[0]
         p2 = self.moves[1].upper()[0]
 
-        winner = -1
-        if p1 == "R" and p2 == "S":
-            winner = 0
-        elif p1 == "S" and p2 == "R":
-            winner = 1
-        elif p1 == "P" and p2 == "R":
-            winner = 0
-        elif p1 == "R" and p2 == "P":
-            winner = 1
-        elif p1 == "S" and p2 == "P":
-            winner = 0
-        elif p1 == "P" and p2 == "S":
-            winner = 1
+        while game_is_ongoing:
+            for i in range(6):  # checks if bottom row is empty
+                if self.holes[i] == 0:
+                    game_is_ongoing = False
+                else:
+                    game_is_ongoing = True
+
+            for i in range(7, 13):  # checks if top row is empty
+                if self.holes[i] == 0:
+                    game_is_ongoing = False
+                else:
+                    game_is_ongoing = True
+
+
+
 
         return winner
 

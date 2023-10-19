@@ -20,6 +20,8 @@ connected = set()
 games = {}
 idCount = 0
 
+game_info =
+
 
 def threaded_client(conn, p, gameId):
     global idCount

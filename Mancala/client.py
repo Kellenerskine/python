@@ -3,20 +3,20 @@ from network import Network
 import pickle
 pygame.font.init()
 
-width = 700
-height = 700
+width = 900
+height = 500
 win = pygame.display.set_mode((width, height))
-pygame.display.set_caption("Client")
+pygame.display.set_caption("Mancala")
 
 
 class Button:
-    def __init__(self, text, x, y, color):
+    def __init__(self, text, x, y, color, width = 50, height = 50):
         self.text = text
         self.x = x
         self.y = y
         self.color = color
-        self.width = 150
-        self.height = 100
+        self.width = width
+        self.height = height
 
     def draw(self, win):
         pygame.draw.rect(win, self.color, (self.x, self.y, self.width, self.height))
@@ -81,7 +81,28 @@ def redrawWindow(win, game, p):
     pygame.display.update()
 
 
-btns = [Button("Rock", 50, 500, (0,0,0)), Button("Scissors", 250, 500, (255,0,0)), Button("Paper", 450, 500, (0,255,0))]
+btns = [
+    Button("Rock", 50, 500, (0, 0, 0)),
+    Button("Scissors", 250, 500, (0, 0, 0)),
+    Button("Paper", 450, 500, (0, 0, 0)),
+    #top row of holes
+    Button(str(game.), 150, 300, (204, 0, 0)),
+    Button(".", 250, 300, (204, 0, 0)),
+    Button(".", 350, 300, (204, 0, 0)),
+    Button(".", 450, 300, (204, 0, 0)),
+    Button(".", 550, 300, (204, 0, 0)),
+    Button(".", 650, 300, (204, 0, 0)),
+    #bottom row of holes
+    Button(",", 150, 400, (0, 204, 204)),
+    Button(",", 250, 400, (0, 204, 204)),
+    Button(",", 350, 400, (0, 204, 204)),
+    Button(",", 450, 400, (0, 204, 204)),
+    Button(",", 550, 400, (0, 204, 204)),
+    Button(",", 650, 400, (0, 204, 204)),
+    #end pockets
+    Button(".", 750, 300, (204, 102, 0), 80, 150),
+    Button(".", 0, 300, (204, 102, 0), 80, 150)
+]
 def main():
     run = True
     clock = pygame.time.Clock()
@@ -144,9 +165,9 @@ def menu_screen():
 
     while run:
         clock.tick(60)
-        win.fill((128, 128, 128))
+        win.fill((128, 128, 128)) #window background color
         font = pygame.font.SysFont("comicsans", 60)
-        text = font.render("Click to Play!", 1, (255,0,0))
+        text = font.render("Click to Play!", 1, (220,20,20))
         win.blit(text, (100,200))
         pygame.display.update()
 
