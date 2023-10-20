@@ -1,9 +1,11 @@
 import socket
 from _thread import *
 import pickle
+
 from game import Game
 
-server = "10.26.30.45"
+#server = "10.26.30.45"
+server = "192.168.0.106"
 port = 5555
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -20,7 +22,7 @@ connected = set()
 games = {}
 idCount = 0
 
-game_info =
+holes = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 
 
 def threaded_client(conn, p, gameId):

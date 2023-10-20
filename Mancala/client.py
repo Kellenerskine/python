@@ -2,6 +2,7 @@ import pygame
 from network import Network
 import pickle
 pygame.font.init()
+from game import Game
 
 width = 900
 height = 500
@@ -86,7 +87,8 @@ btns = [
     Button("Scissors", 250, 500, (0, 0, 0)),
     Button("Paper", 450, 500, (0, 0, 0)),
     #top row of holes
-    Button(str(game.), 150, 300, (204, 0, 0)),
+    Game.
+    Button(str(Game.holes[0]), 150, 300, (204, 0, 0)),
     Button(".", 250, 300, (204, 0, 0)),
     Button(".", 350, 300, (204, 0, 0)),
     Button(".", 450, 300, (204, 0, 0)),
@@ -114,6 +116,7 @@ def main():
         clock.tick(60)
         try:
             game = n.send("get")
+            a = game.holes[0]
         except:
             run = False
             print("Couldn't get game")
