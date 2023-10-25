@@ -2,7 +2,6 @@ import socket
 from _thread import *
 import pickle
 
-from game import Game
 
 #server = "192.168.0.146" #rpi
 server = "192.168.0.106" #macbook

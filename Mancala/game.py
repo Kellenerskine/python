@@ -1,31 +1,34 @@
 class Game:
-    def __init__(self, id, holes):
+    def __init__(self, id):
         self.p1Went = False
         self.p2Went = False
         self.ready = False
         self.id = id
         self.moves = [None, None]
         self.wins = [0, 0]
-        self.holes = holes
 
 
 
-    def hole_picked(self, hole_number):
-        marbles = self.holes[hole_number]
-        next_hole = hole_number + 1
 
-        while marbles > 0:
-            if (next_hole == 6):
-                if (True):  # goal is not mine
-                    next_hole += 1  # incrementing next hole index
-            else:
-                self.holes[next_hole] += 1  # adding marble to next hole
-                next_hole += 1  # incrementing next hold index
-                marbles -= 1
-
-        self.holes[hole_number] = 0
-
-        return self.holes
+    # def gimme_holes(self):
+    #     return self.holes
+    #
+    # def hole_picked(self, hole_number):
+    #     marbles = self.holes[hole_number]
+    #     next_hole = hole_number + 1
+    #
+    #     while marbles > 0:
+    #         if (next_hole == 6):
+    #             if (True):  # goal is not mine
+    #                 next_hole += 1  # incrementing next hole index
+    #         else:
+    #             self.holes[next_hole] += 1  # adding marble to next hole
+    #             next_hole += 1  # incrementing next hold index
+    #             marbles -= 1
+    #
+    #     self.holes[hole_number] = 0
+    #
+    #     return self.holes
 
     def get_player_move(self, p):
         """
@@ -72,7 +75,7 @@ class Game:
 
 
 
-        return winner
+        return p1
 
     def resetWent(self):
         self.p1Went = False

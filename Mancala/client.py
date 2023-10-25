@@ -9,6 +9,8 @@ height = 500
 win = pygame.display.set_mode((width, height))
 pygame.display.set_caption("Mancala")
 
+game_state = [0, 0, 4, 0]
+
 
 class Button:
     def __init__(self, text, x, y, color, width = 50, height = 50):
@@ -87,8 +89,7 @@ btns = [
     Button("Scissors", 250, 500, (0, 0, 0)),
     Button("Paper", 450, 500, (0, 0, 0)),
     #top row of holes
-    Game.
-    Button(str(Game.holes[0]), 150, 300, (204, 0, 0)),
+    Button(str(game_state[2]), 150, 300, (204, 0, 0)),
     Button(".", 250, 300, (204, 0, 0)),
     Button(".", 350, 300, (204, 0, 0)),
     Button(".", 450, 300, (204, 0, 0)),
@@ -162,26 +163,28 @@ def main():
 
         redrawWindow(win, game, player)
 
-def menu_screen():
-    run = True
-    clock = pygame.time.Clock()
+# def menu_screen():
+#     run = True
+#     clock = pygame.time.Clock()
+#
+#     while run:
+#         clock.tick(60)
+#         win.fill((128, 128, 128)) #window background color
+#         font = pygame.font.SysFont("comicsans", 60)
+#         text = font.render("Click to Play!", 1, (220,20,20))
+#         win.blit(text, (100,200))
+#         pygame.display.update()
+#
+#         for event in pygame.event.get():
+#             if event.type == pygame.QUIT:
+#                 pygame.quit()
+#                 run = False
+#             if event.type == pygame.MOUSEBUTTONDOWN:
+#                 run = False
+#
+#     main()
 
-    while run:
-        clock.tick(60)
-        win.fill((128, 128, 128)) #window background color
-        font = pygame.font.SysFont("comicsans", 60)
-        text = font.render("Click to Play!", 1, (220,20,20))
-        win.blit(text, (100,200))
-        pygame.display.update()
+# while True:
+#     menu_screen()
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-                run = False
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                run = False
-
-    main()
-
-while True:
-    menu_screen()
+main()
