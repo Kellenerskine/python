@@ -1,13 +1,14 @@
 import json
 import socket
 from _thread import *
-
+#TODO: reset player_num
 server = "192.168.0.106"
 port = 5050
 
 player_number = 0
 
-game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+#game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+game_state = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
 # server setup
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
