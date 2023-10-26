@@ -9,7 +9,7 @@ port = 5555
 #game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 client_num = 0
 my_turn = True
-#TODO: issue?
+#TODO: make client constantly request updated list and turn_state until my_turn = True
 
 
 
@@ -79,29 +79,56 @@ def redrawWindow(window):
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((server, port))
 
+
 # data exchange below
+def get_game_state():
+    global game_state, my_turn, client_num
+    start_msg = "gimme"
+    start_msg_json = json.dumps(start_msg)
+    start_msg_json_bytes = start_msg_json.encode('utf-8')
 
-start_msg = "gimme"
-start_msg_json = json.dumps(start_msg)
-start_msg_json_bytes = start_msg_json.encode('utf-8')
+    s.sendall(start_msg_json_bytes)
 
-s.sendall(start_msg_json_bytes)
+    data_from_server_encoded = s.recv(1024 * 2)
+    data_from_server = json.loads(data_from_server_encoded.decode('utf-8'))
 
-data_from_server_encoded = s.recv(1024 * 2)
-data_from_server = json.loads(data_from_server_encoded.decode('utf-8'))
+    game_state = data_from_server[0]
+    client_num = data_from_server[1]
 
-game_state = data_from_server[0]
-client_num = data_from_server[1]
+    if client_num == 1:
+        my_turn = True
+    else:
+        my_turn = False
 
-if client_num == 1:
-    my_turn = True
-else:
-    my_turn = False
+    print(f"server sent: {data_from_server}")
 
-print(f"server sent: {data_from_server}")
+#gets the initial game state from server
+get_game_state()
 
 # auto-closes connection
 # with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+def my_turn_yet():
+    global my_turn
+    redrawWindow(screen)
+    #constantly asking server if its my turn yet
+    while my_turn == False:
+        msg = ["my_turn?", client_num]
+        msg_json = json.dumps(msg)
+        msg_json_bytes = msg_json.encode('utf-8')
+
+        s.sendall(msg_json_bytes)
+
+        turn_state_encoded = s.recv(1024 * 2)
+        turn_state = json.loads(turn_state_encoded.decode('utf-8'))
+        if turn_state == "yes":
+            my_turn = True
+        else:
+            pass
+            #print(f"{turn_state}, not your turn yet!")
+
+    get_game_state()
+
+
 
 def change_turn():
     global my_turn
@@ -110,17 +137,16 @@ def change_turn():
     else:
         my_turn = False
 
-
-
     sending_turn_change = "change"
     sending_turn_change_json = json.dumps(sending_turn_change)
     sending_turn_change_json_bytes = sending_turn_change_json.encode('utf-8')
     s.sendall(sending_turn_change_json_bytes)
 
-    #turn_change_conf_encoded = s.recv(1024 * 2)
+    turn_change_conf_encoded = s.recv(1024 * 2)
     print("here")
-    # turn_change_conf = json.loads(turn_change_conf_encoded.decode('utf-8'))
-    # print(f"turn change conf: {turn_change_conf}")
+    turn_change_conf = json.loads(turn_change_conf_encoded.decode('utf-8'))
+    print(f"turn change conf: {turn_change_conf}")
+    my_turn_yet()
 
 
 def check_win():
@@ -139,38 +165,6 @@ def update_server_game_list():
     print(f"updated game list: {updated_game_list_confirmation}")
 
     change_turn()
-
-
-
-
-
-
-def hole_chosen(hole):
-    # TODO: if clicked empty hole blit: "empty hole clicked"
-    print(f"client number: {client_num}")
-
-    marbles = game_state[hole]
-    game_state[hole] = 0
-    next_hole = hole + 1
-    # TODO: avoid/enter endgoals
-    while marbles > 0:
-        if (next_hole == 6) and client_num == 2:
-            # player 2 shouldn't score for player 1
-            next_hole += 1
-        elif (next_hole == 13) and client_num == 1:
-            next_hole += 1
-        else:
-            game_state[next_hole] += 1
-            next_hole += 1
-            marbles -= 1
-
-    print(f"this is current game state: {game_state}")
-    update_server_game_list()
-
-
-
-    redrawWindow(screen)
-    pygame.display.flip()
 
 
 
@@ -193,6 +187,57 @@ btns = [Button(str(game_state[0]), center_x - 300, center_y, (0, 0, 0)),
         Button(str(game_state[13]), center_x - 425, center_y - 100, (0, 0, 0), 75, 150),
         ]
 
+def update_buttons():
+    global btns
+    btns = [Button(str(game_state[0]), center_x - 300, center_y, (0, 0, 0)),
+            Button(str(game_state[1]), center_x - 200, center_y, (0, 0, 0)),
+            Button(str(game_state[2]), center_x - 100, center_y, (0, 0, 0)),
+            Button(str(game_state[3]), center_x, center_y, (0, 0, 0)),
+            Button(str(game_state[4]), center_x + 100, center_y, (0, 0, 0)),
+            Button(str(game_state[5]), center_x + 200, center_y, (0, 0, 0)),
+            Button(str(game_state[6]), center_x + 300, center_y - 100, (0, 0, 0), 75, 150),
+            Button(str(game_state[7]), center_x + 200, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[8]), center_x + 100, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[9]), center_x, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[10]), center_x - 100, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[11]), center_x - 200, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[12]), center_x - 300, center_y - 100, (0, 0, 0)),
+            Button(str(game_state[13]), center_x - 425, center_y - 100, (0, 0, 0), 75, 150),
+            ]
+
+
+
+def hole_chosen(hole):
+    # TODO: if clicked empty hole blit: "empty hole clicked"
+    print(f"client number: {client_num}")
+
+    marbles = game_state[hole]
+    game_state[hole] = 0
+    next_hole = hole + 1
+    # TODO: avoid/enter endgoals
+    while marbles > 0:
+        if (next_hole == 6) and client_num == 2:
+            # player 2 shouldn't score for player 1
+            next_hole += 1
+        elif (next_hole == 13) and client_num == 1:
+            next_hole += 1
+        else:
+            game_state[next_hole] += 1
+            next_hole += 1
+            marbles -= 1
+
+        if (next_hole == 6) and (client_num == 1) and marbles == 1:
+            #reset turn
+            change_turn()
+        if (next_hole == 13) and (client_num == 2) and marbles == 1:
+            change_turn()
+
+
+    print(f"this is current game state: {game_state}")
+    update_buttons()
+    update_server_game_list()
+
+
 
 # Variable to keep our game loop running
 
@@ -200,7 +245,10 @@ btns = [Button(str(game_state[0]), center_x - 300, center_y, (0, 0, 0)),
 def main():
     # game loop
     running = True
+    patience_counter = 0
+    clock = pygame.time.Clock()
     while running:
+        clock.tick(60)
         if my_turn:
             pass
 
@@ -226,10 +274,17 @@ def main():
                             print(f"marbles in button: {game_state[btn_counter]}")
                             hole_chosen(btn_counter)
                         else:
-                            pass
-                            #flash: not your turn
+                            patience_counter += 1
+                            # print(f"patience tested x{patience_counter}")
+                            # font = pygame.font.SysFont("comicsans", 50)
+                            # text = font.render("Not your turn!", 1, (200, 0, 200))
+                            # screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2)))
+                            # redrawWindow(screen)
+                            # pygame.display.flip()
 
         redrawWindow(screen)
+
+
 
     # leaving the with block will auto leave the server
 
