@@ -65,7 +65,7 @@ while True:
     idCount += 1
     p = 0
     gameId = (idCount - 1)//2
-    if idCount % 2 == 1:
+ :
         games[gameId] = Game(gameId)
         print("Creating a new game...")
     else:
