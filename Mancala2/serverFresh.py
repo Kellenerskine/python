@@ -3,7 +3,7 @@ import socket
 from _thread import *
 #TODO: reset player_num
 server = "192.168.0.106"
-port = 5050
+port = 5555
 
 game_started = False
 player_number = 0
