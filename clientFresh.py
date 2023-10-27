@@ -122,10 +122,10 @@ def redrawWindow(window):
 
     if not check_win():
         if my_turn:
-            text = font.render("Your move", 1, (0, 200, 10))
+            text = font.render("Your move", 1, (0, 102, 51))
             screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2) - 150))
         else:
-            text = font.render("Opponent move", 1, (232, 13, 13))
+            text = font.render("Opponent move", 1, (102, 0, 0))
             screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2) - 150))
     else:
         font = pygame.font.SysFont("comicsans", 60)
