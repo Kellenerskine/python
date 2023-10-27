@@ -30,7 +30,7 @@ screen.fill(background_colour)
 # Update the display using flip
 pygame.display.flip()
 
-
+game_winner = 0
 class Button:
     def __init__(self, text, x, y, color, width=50, height=50):
         self.text = text
@@ -120,14 +120,48 @@ def redrawWindow(window):
         screen.blit(text, ((width / 2 - text.get_width() / 2) - 400, (height / 2 - text.get_height() / 2) - 150))
         screen.blit(text2, ((width / 2 - text.get_width() / 2) - 300, (height / 2 - text.get_height() / 2) - 150))
 
-    if my_turn:
-        text = font.render("Your move", 1, (0, 200, 10))
+    if not check_win():
+        if my_turn:
+            text = font.render("Your move", 1, (0, 200, 10))
+            screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2) - 150))
+        else:
+            text = font.render("Opponent move", 1, (232, 13, 13))
+            screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2) - 150))
     else:
-        text = font.render("Opponent move", 1, (232, 13, 13))
+        font = pygame.font.SysFont("comicsans", 60)
+        win_message = font.render("You Win!", 1, (0, 0, 0))
+        lose_message = font.render("You Lose :(", 1, (0, 0, 0))
+        if game_winner == 1:
+            if client_num == 1:
+                screen.blit(win_message, (
+                (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
+                pygame.display.update()
+                pygame.time.delay(30000)
+                pygame.quit()
+            else:
+                screen.blit(lose_message, (
+                (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
+                pygame.display.update()
+                pygame.time.delay(30000)
+                pygame.quit()
+        elif game_winner == 2:
+            if client_num == 2:
+                screen.blit(win_message, (
+                (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
+                pygame.display.update()
+                pygame.time.delay(30000)
+                pygame.quit()
+            else:
+                screen.blit(lose_message, (
+                (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
+                pygame.display.update()
+                pygame.time.delay(30000)
+                pygame.quit()
+
 
     loopy += 1
     # else: text = their move
-    screen.blit(text, (width / 2 - text.get_width() / 2, (height / 2 - text.get_height() / 2) - 150))
+
 
     for btn in btns:
         btn.draw(window)
@@ -161,6 +195,8 @@ def my_turn_yet():
     redrawWindow(screen)
     # constantly asking server if its my turn yet
     while not my_turn:
+        if check_win():
+            break
         msg = ["my_turn?", client_num]
         # print("client num: ", client_num)
         msg_json = json.dumps(msg)
@@ -199,14 +235,29 @@ def my_turn_yet_single():
         elif turn_state == "no":
             my_turn = False
 
-            # print(f"{turn_state}, not your turn yet!")
-
-    # redrawWindow(screen)
 
 
 
 def check_win():
-    pass
+    global game_winner
+    if game_state[0] == 0 and game_state[1] == 0 and game_state[2] == 0 and game_state[3] == 0 and game_state[4] == 0 and game_state[5] == 0:
+        for i in range(7, 13):
+            game_state[13] += game_state[i]
+            game_winner = 1
+            return True
+    elif game_state[7] == 0 and game_state[8] == 0 and game_state[9] == 0 and game_state[10] == 0 and game_state[11] == 0 and game_state[12] == 0:
+        for i in range(0, 6):
+            game_state[6] += game_state[i]
+            game_winner = 2
+            return True
+    else:
+        return False
+
+
+
+
+
+
 
 
 def update_server_game_list():
@@ -223,9 +274,6 @@ def update_server_game_list():
     # sets my_turn to false
     my_turn = False
     redrawWindow(screen)
-
-    # my_turn_yet()
-    # change_turn()
 
 
 def hole_chosen(hole):
@@ -303,9 +351,11 @@ def main():
     global client_num
     # game loop
     running = True
+    clock = pygame.time.Clock()
     loop_counter = 1
     client_num -= 1
     while running:
+        clock.tick(60)
         get_game_state()
         if loop_counter == 1:
             starting_positions()
@@ -313,6 +363,7 @@ def main():
 
         redrawWindow(screen)
         watch_buttons()
+
 
         for event in pygame.event.get():
             # Check for QUIT event

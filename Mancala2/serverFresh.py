@@ -12,7 +12,7 @@ player_number = 1
 turn_counter = 1
 
 #game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-game_state = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
+game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
 
 # server setup
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
