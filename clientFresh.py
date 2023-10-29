@@ -5,7 +5,7 @@ import pygame
 pygame.font.init()
 
 server = "192.168.0.106"
-port = 5555
+port = 5001
 game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 client_num = 0
 my_turn = True

@@ -4,14 +4,14 @@ from _thread import *
 
 # TODO: reset player_num
 server = "192.168.0.106"
-port = 5555
+port = 5001
 
 game_started = False
 player_number = 1
-
+records = "4w6l"
 turn_counter = 1
 
-#game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+# game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
 
 # server setup
@@ -22,12 +22,11 @@ print("Server running, listening for connection...")
 
 
 def threaded_client(conn, client_num):
-    global game_state
+    global game_state, player_number
     global game_started, turn_counter
     game_started = True
     print(f"client num: {client_num}")
     player_num = client_num
-    # player_num += 1
 
     while True:
         try:
@@ -45,7 +44,6 @@ def threaded_client(conn, client_num):
                 break
             # client is asking for game state
             if data[0] == "gimme":
-                #print(f"Client {data[1]} says: {data}")
                 # sending the client the game state and their player_number
                 reply = encode_stuff([game_state, player_num, turn_counter])
 
@@ -65,8 +63,7 @@ def threaded_client(conn, client_num):
                 print(f"game state after update: {game_state}")
 
             # client is asking if its their turn yet?
-            elif (data[0] == "my_turn?"):
-                # print(f"client says: {data}")
+            elif data[0] == "my_turn?":
                 if data[1] == turn_counter:
                     msg = "yes"
                 else:
@@ -77,9 +74,6 @@ def threaded_client(conn, client_num):
 
             else:
                 pass
-
-            # conn.sendall(reply)
-
         except:
             break
 
@@ -89,8 +83,26 @@ def threaded_client(conn, client_num):
         # close the connection
     except:
         pass
+    # TODO: have not tested the line below
+    player_number = 1
     conn.close()
     # TODO:reset server player num var when people DC
+
+def get_records(ipaddr):
+    user_ip = ipaddr
+    user_exists = False
+    with open('records.txt', 'r') as f:
+        file_data = f.readlines()
+        for i in file_data:
+            print("stuff", (i[0:13]))
+            if i[0:13] == user_ip:
+                records = str(i[-4:])
+                user_exists = True
+
+    if not user_exists:
+        with open('records.txt', 'a') as f:
+            f.write(f"\n{ipaddr}: 1W0L")
+            records = "0W0L"
 
 
 while True:
@@ -99,5 +111,7 @@ while True:
         player_number += 1
 
     print(f"Connected to player {player_number} at: ", addr)
+    print("records are: ", get_records(addr[0]))
+
 
     start_new_thread(threaded_client, (conn, player_number))

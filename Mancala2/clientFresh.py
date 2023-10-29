@@ -5,11 +5,11 @@ import pygame
 pygame.font.init()
 
 server = "192.168.0.106"
-port = 5555
+port = 5001
 game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 client_num = 0
 my_turn = True
-# TODO: make client constantly request updated list and turn_state until my_turn = True
+record = "4W 4L"
 
 
 height = 400
@@ -31,6 +31,8 @@ screen.fill(background_colour)
 pygame.display.flip()
 
 game_winner = 0
+
+
 class Button:
     def __init__(self, text, x, y, color, width=50, height=50):
         self.text = text
@@ -134,34 +136,35 @@ def redrawWindow(window):
         if game_winner == 1:
             if client_num == 1:
                 screen.blit(win_message, (
-                (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
+                    (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
                 pygame.time.delay(30000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
-                (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
+                    (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
                 pygame.time.delay(30000)
                 pygame.quit()
         elif game_winner == 2:
             if client_num == 2:
                 screen.blit(win_message, (
-                (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
+                    (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
                 pygame.time.delay(30000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
-                (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
+                    (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
                 pygame.time.delay(30000)
                 pygame.quit()
-
+#TODO: BRING IN W/L RECORDS
+    font = pygame.font.SysFont("comicsans", 15)
+    text = font.render(f"Record: {record}", 1, (0, 0, 0))
+    screen.blit(text, ((width / 2 - text.get_width() / 2) - 400, (height / 2 - text.get_height() / 2) + 150))
 
     loopy += 1
-    # else: text = their move
-
 
     for btn in btns:
         btn.draw(window)
@@ -198,7 +201,6 @@ def my_turn_yet():
         if check_win():
             break
         msg = ["my_turn?", client_num]
-        # print("client num: ", client_num)
         msg_json = json.dumps(msg)
         msg_json_bytes = msg_json.encode('utf-8')
 
@@ -210,10 +212,6 @@ def my_turn_yet():
             my_turn = True
         elif turn_state == "no":
             my_turn = False
-
-            # print(f"{turn_state}, not your turn yet!")
-
-    # redrawWindow(screen)
 
 
 def my_turn_yet_single():
@@ -236,28 +234,22 @@ def my_turn_yet_single():
             my_turn = False
 
 
-
-
 def check_win():
     global game_winner
-    if game_state[0] == 0 and game_state[1] == 0 and game_state[2] == 0 and game_state[3] == 0 and game_state[4] == 0 and game_state[5] == 0:
+    if game_state[0] == 0 and game_state[1] == 0 and game_state[2] == 0 and game_state[3] == 0 and game_state[
+        4] == 0 and game_state[5] == 0:
         for i in range(7, 13):
             game_state[13] += game_state[i]
             game_winner = 1
             return True
-    elif game_state[7] == 0 and game_state[8] == 0 and game_state[9] == 0 and game_state[10] == 0 and game_state[11] == 0 and game_state[12] == 0:
+    elif game_state[7] == 0 and game_state[8] == 0 and game_state[9] == 0 and game_state[10] == 0 and game_state[
+        11] == 0 and game_state[12] == 0:
         for i in range(0, 6):
             game_state[6] += game_state[i]
             game_winner = 2
             return True
     else:
         return False
-
-
-
-
-
-
 
 
 def update_server_game_list():
@@ -363,7 +355,6 @@ def main():
 
         redrawWindow(screen)
         watch_buttons()
-
 
         for event in pygame.event.get():
             # Check for QUIT event
