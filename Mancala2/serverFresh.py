@@ -87,13 +87,13 @@ def threaded_client(conn, client_num, record, ip):
             break
 
     print("Lost connection")
-    try:
-        print("Closing connection")
-        # close the connection
-    except:
-        pass
+    print("Closing connection")
+    # close the connection
     # TODO: have not tested the line below
-    player_number = 1
+    player_number -= 1
+    # game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+    game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+    print(f"player num {player_number}")
     conn.close()
     # TODO:reset server player num var when people DC
 
@@ -132,9 +132,6 @@ def record_loss(user_ip):
     f = open('records.txt', 'r+')
     file_data = f.readlines()
     file_as_list = list(file_data)
-    for i in file_as_list:
-        i = i.rstrip("\n")
-        print(f"i: {i}")
 
     f.close()
 
@@ -191,8 +188,5 @@ while True:
         player_number += 1
 
     records = get_records(addr[0])
-
-    # print(f"Connected to player {player_number} at: ", addr)
-    # print("records are: ", get_records(addr[0]))
 
     start_new_thread(threaded_client, (conn, player_number, records, addr[0]))
