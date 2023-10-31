@@ -149,12 +149,14 @@ def redrawWindow(window):
                 screen.blit(win_message, (
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
+                send_records()
                 pygame.time.delay(10000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
+                send_records()
                 pygame.time.delay(10000)
                 pygame.quit()
         elif game_winner == 2:
@@ -162,15 +164,17 @@ def redrawWindow(window):
                 screen.blit(win_message, (
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
+                send_records()
                 pygame.time.delay(10000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
+                send_records()
                 pygame.time.delay(10000)
                 pygame.quit()
-    # TODO: BRING IN W/L RECORDS
+
     font = pygame.font.SysFont("comicsans", 15)
     text = font.render(f"Record: {record}", 1, (0, 0, 0))
     screen.blit(text, ((width / 2 - text.get_width() / 2) - 400, (height / 2 - text.get_height() / 2) + 150))
@@ -188,9 +192,21 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect((server, port))
 
 
+def send_records():
+    if game_winner == client_num:
+        msg = ["i won", client_num]
+    else:
+        msg = ["i lost", client_num]
+
+    msg_json = json.dumps(msg)
+    msg_json_bytes = msg_json.encode('utf-8')
+
+    s.sendall(msg_json_bytes)
+
+
 # data exchange below
 def get_game_state():
-    global game_state, my_turn, client_num
+    global game_state, my_turn, client_num, record
     start_msg = ["gimme", client_num]
     start_msg_json = json.dumps(start_msg)
     start_msg_json_bytes = start_msg_json.encode('utf-8')
@@ -202,12 +218,13 @@ def get_game_state():
 
     game_state = data_from_server[0]
     client_num = data_from_server[1]
+    record = str(data_from_server[3])
 
 
 def my_turn_yet():
     global my_turn, client_num, game_state
     redrawWindow(screen)
-    # constantly asking server if its my turn yet
+    # constantly asking server if it's my turn yet
     while not my_turn:
         if check_win():
             break

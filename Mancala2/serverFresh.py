@@ -8,11 +8,10 @@ port = 5001
 
 game_started = False
 player_number = 1
-records = "4w6l"
 turn_counter = 1
 
-game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-# game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+# game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
 
 # server setup
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -21,11 +20,11 @@ s.listen(2)
 print("Server running, listening for connection...")
 
 
-def threaded_client(conn, client_num):
+def threaded_client(conn, client_num, record, ip):
     global game_state, player_number
     global game_started, turn_counter
     game_started = True
-    print(f"client num: {client_num}")
+    print(f"client number {client_num} has connected!")
     player_num = client_num
 
     while True:
@@ -45,7 +44,7 @@ def threaded_client(conn, client_num):
             # client is asking for game state
             if data[0] == "gimme":
                 # sending the client the game state and their player_number
-                reply = encode_stuff([game_state, player_num, turn_counter])
+                reply = encode_stuff([game_state, player_num, turn_counter, record])
 
                 conn.sendall(reply)
             # client is sending the updated game state
@@ -76,6 +75,11 @@ def threaded_client(conn, client_num):
                 reply = encode_stuff(f"go ahead! current SGS: {game_state}")
 
                 conn.sendall(reply)
+            elif data[0] == "i won":
+                record_win(ip)
+            elif data[0] == "i lost":
+                pass
+                #record_loss(ip)
 
             else:
                 pass
@@ -93,21 +97,67 @@ def threaded_client(conn, client_num):
     conn.close()
     # TODO:reset server player num var when people DC
 
+
 def get_records(ipaddr):
     user_ip = ipaddr
     user_exists = False
+    results = ""
     with open('records.txt', 'r') as f:
         file_data = f.readlines()
+
         for i in file_data:
-            print("stuff", (i[0:13]))
             if i[0:13] == user_ip:
-                records = str(i[-4:])
+                results = str(i[-4:])
                 user_exists = True
 
     if not user_exists:
         with open('records.txt', 'a') as f:
-            f.write(f"\n{ipaddr}: 1W0L")
-            records = "0W0L"
+            f.write(f"\n{ipaddr}: 0W0L")
+            results = "0W0L"
+
+    return results
+
+
+def record_loss(user_ip):
+    line_count = 0
+    with open('records.txt', 'r') as f:
+        file_data = f.readlines()
+        for i in file_data:
+            if i[0:13] == user_ip:
+                break
+            else:
+                line_count += 1
+
+    with open('records.txt', 'r+') as f:
+        file_data = f.readlines()
+        file_as_list = list(file_data)
+        open('records.txt', 'w').close()
+        for i in file_as_list:
+            if i[0:13] == user_ip:
+                f.write(f"{i[0:17]}{str(int(i[17]) + 1)}{i[18]}\n")
+            else:
+                f.write(f"{i}\n")
+
+
+def record_win(user_ip):
+    line_count = 0
+    with open('records.txt', 'r') as f:
+        file_data = f.readlines()
+        for i in file_data:
+            if i[0:13] == user_ip:
+                break
+            else:
+                line_count += 1
+
+    with open('records.txt', 'r+') as f:
+        file_data = f.readlines()
+        file_as_list = list(file_data)
+        open('records.txt', 'w').close()
+        for i in file_as_list:
+            if i[0:13] == user_ip:
+                f.write(f"{i[0:17]}{str(int(i[15]) + 1)}{i[16:]}\n")
+            else:
+                f.write(f"{i}\n")
 
 
 while True:
@@ -115,8 +165,9 @@ while True:
     if game_started:
         player_number += 1
 
-    print(f"Connected to player {player_number} at: ", addr)
-    print("records are: ", get_records(addr[0]))
+    records = get_records(addr[0])
 
+    # print(f"Connected to player {player_number} at: ", addr)
+    # print("records are: ", get_records(addr[0]))
 
-    start_new_thread(threaded_client, (conn, player_number))
+    start_new_thread(threaded_client, (conn, player_number, records, addr[0]))
