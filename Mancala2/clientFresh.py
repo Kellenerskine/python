@@ -3,14 +3,15 @@ import socket
 import pygame
 
 pygame.font.init()
+pygame.mixer.init()
 
 server = "192.168.0.106"
 port = 5001
 game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 client_num = 0
 my_turn = True
+go_again = False
 record = "4W 4L"
-
 
 height = 400
 width = 900
@@ -31,6 +32,12 @@ screen.fill(background_colour)
 pygame.display.flip()
 
 game_winner = 0
+
+
+def greeting(file):
+    greeting = pygame.mixer.Sound(file)
+    pygame.mixer.Sound.play(greeting)
+    pygame.mixer.music.stop()
 
 
 class Button:
@@ -85,7 +92,7 @@ goal_color = (0, 51, 102)
 
 
 def update_buttons():
-    global btns
+    global btns, game_state
     btns = [Button(str(game_state[0]), center_x - 300, center_y, bot_row_color),
             Button(str(game_state[1]), center_x - 200, center_y, bot_row_color),
             Button(str(game_state[2]), center_x - 100, center_y, bot_row_color),
@@ -106,7 +113,11 @@ def update_buttons():
 def redrawWindow(window):
     global client_num, my_turn
     loopy = 0
-    pygame.display.set_caption(f"Mancala Client {client_num}")
+    if client_num == 1:
+        pygame.display.set_caption(f"Professor Falken")
+    else:
+        pygame.display.set_caption(f"JOSHUA")
+
     update_buttons()
     window.fill((128, 128, 128))
     font = pygame.font.SysFont("comicsans", 20)
@@ -138,28 +149,28 @@ def redrawWindow(window):
                 screen.blit(win_message, (
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
-                pygame.time.delay(30000)
+                pygame.time.delay(10000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
-                pygame.time.delay(30000)
+                pygame.time.delay(10000)
                 pygame.quit()
         elif game_winner == 2:
             if client_num == 2:
                 screen.blit(win_message, (
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
-                pygame.time.delay(30000)
+                pygame.time.delay(10000)
                 pygame.quit()
             else:
                 screen.blit(lose_message, (
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
-                pygame.time.delay(30000)
+                pygame.time.delay(10000)
                 pygame.quit()
-#TODO: BRING IN W/L RECORDS
+    # TODO: BRING IN W/L RECORDS
     font = pygame.font.SysFont("comicsans", 15)
     text = font.render(f"Record: {record}", 1, (0, 0, 0))
     screen.blit(text, ((width / 2 - text.get_width() / 2) - 400, (height / 2 - text.get_height() / 2) + 150))
@@ -194,7 +205,7 @@ def get_game_state():
 
 
 def my_turn_yet():
-    global my_turn, client_num
+    global my_turn, client_num, game_state
     redrawWindow(screen)
     # constantly asking server if its my turn yet
     while not my_turn:
@@ -208,14 +219,18 @@ def my_turn_yet():
 
         turn_state_encoded = s.recv(1024 * 2)
         turn_state = json.loads(turn_state_encoded.decode('utf-8'))
-        if turn_state == "yes":
+        if turn_state[0] == "yes":
             my_turn = True
-        elif turn_state == "no":
+        elif turn_state[0] == "no":
+            game_state = turn_state[1]
+            update_buttons()
+            redrawWindow(screen)
+            print(f"current non-turn-client GS: {game_state}")
             my_turn = False
 
 
 def my_turn_yet_single():
-    global my_turn, client_num
+    global my_turn, client_num, game_state
     redrawWindow(screen)
     # constantly asking server if its my turn yet
     if not my_turn:
@@ -228,9 +243,12 @@ def my_turn_yet_single():
 
         turn_state_encoded = s.recv(1024 * 2)
         turn_state = json.loads(turn_state_encoded.decode('utf-8'))
-        if turn_state == "yes":
+        if turn_state[0] == "yes":
             my_turn = True
-        elif turn_state == "no":
+        elif turn_state[0] == "no":
+            game_state = turn_state[1]
+            update_buttons()
+            redrawWindow(screen)
             my_turn = False
 
 
@@ -269,7 +287,7 @@ def update_server_game_list():
 
 
 def hole_chosen(hole):
-    global my_turn
+    global go_again
 
     marbles = game_state[hole]
     game_state[hole] = 0
@@ -278,24 +296,54 @@ def hole_chosen(hole):
     while marbles > 0:
         if next_hole == 14:
             next_hole = 0
+            go_again = False
         if (next_hole == 6) and client_num == 2:
-            # player 2 shouldn't score for player 1
+            # dodging hole 6
             next_hole += 1
+            go_again = False
         elif (next_hole == 13) and client_num == 1:
+            # dodging hole 13
             next_hole += 1
+            go_again = False
+        elif (next_hole == 13) and client_num == 2 and marbles == 1:
+            game_state[next_hole] += 1
+            marbles -= 1
+            go_again = True
+        elif (next_hole == 6) and client_num == 1 and marbles == 1:
+            game_state[next_hole] += 1
+            marbles -= 1
+            go_again = True
         else:
             game_state[next_hole] += 1
             next_hole += 1
             marbles -= 1
+            go_again = False
+
+    print(f"game state after hole picked: {game_state}")
 
 
-# Variable to keep game loop running
 def click(btn):
+    global go_again
     hole_chosen(btn)
-    update_buttons()
-    update_server_game_list()
-    my_turn_yet()
-    update_buttons()
+
+    if go_again:
+        update_buttons()
+        # sends server updated state before switching turns
+        msg = ["going_again", game_state]
+        msg_json = json.dumps(msg)
+        msg_json_bytes = msg_json.encode('utf-8')
+        s.sendall(msg_json_bytes)
+
+        updated_game_list_encoded = s.recv(1024 * 2)
+        updated_game_list_reply = json.loads(updated_game_list_encoded.decode('utf-8'))
+
+        print(updated_game_list_reply)
+    else:
+        update_buttons()
+        update_server_game_list()
+        my_turn_yet()
+        update_buttons()
+        go_again = False
 
 
 def watch_buttons():
@@ -312,8 +360,8 @@ def watch_buttons():
                     if my_turn:
                         print(f"This is the button that was pressed: {btn_counter}")
                         print(f"marbles in button: {game_state[btn_counter]}")
-                        # cannot click goals
                         if (
+                                # making sure one client cannot click the other's holes
                                 btn_counter == 0 or btn_counter == 1 or btn_counter == 2 or btn_counter == 3 or
                                 btn_counter == 4 or btn_counter == 5) and (
                                 btn_counter != 6 or btn_counter != 13):
@@ -336,7 +384,10 @@ def starting_positions():
     if client_num == 2:
         my_turn = False
 
-    print("my turn value: ", my_turn)
+    # if client_num == 1:
+    #     greeting("/Users/kellen/Desktop/falken.wav")
+    # else:
+    #     greeting("/Users/kellen/Desktop/shalplaygameq.wav")
 
 
 def main():
@@ -348,7 +399,8 @@ def main():
     client_num -= 1
     while running:
         clock.tick(60)
-        get_game_state()
+        if not go_again:
+            get_game_state()
         if loop_counter == 1:
             starting_positions()
         loop_counter += 1

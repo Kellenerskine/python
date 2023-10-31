@@ -11,8 +11,8 @@ player_number = 1
 records = "4w6l"
 turn_counter = 1
 
-# game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+# game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
 
 # server setup
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,10 +65,15 @@ def threaded_client(conn, client_num):
             # client is asking if its their turn yet?
             elif data[0] == "my_turn?":
                 if data[1] == turn_counter:
-                    msg = "yes"
+                    msg = ["yes"]
                 else:
-                    msg = "no"
+                    msg = ["no", game_state]
                 reply = encode_stuff(msg)
+
+                conn.sendall(reply)
+            elif data[0] == "going_again":
+                game_state = data[1]
+                reply = encode_stuff(f"go ahead! current SGS: {game_state}")
 
                 conn.sendall(reply)
 
