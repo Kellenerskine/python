@@ -3,7 +3,7 @@ import socket
 import pygame
 
 pygame.font.init()
-pygame.mixer.init()
+# pygame.mixer.init()
 
 server = "192.168.0.106"
 port = 5001
@@ -34,10 +34,10 @@ pygame.display.flip()
 game_winner = 0
 
 
-def greeting(file):
-    greeting = pygame.mixer.Sound(file)
-    pygame.mixer.Sound.play(greeting)
-    pygame.mixer.music.stop()
+# def greeting(file):
+#     greeting = pygame.mixer.Sound(file)
+#     pygame.mixer.Sound.play(greeting)
+#     pygame.mixer.music.stop()
 
 
 class Button:
@@ -218,7 +218,9 @@ def get_game_state():
 
     game_state = data_from_server[0]
     client_num = data_from_server[1]
-    record = str(data_from_server[3])
+    record = str(data_from_server[3])[0:5]
+    print(f"data: {data_from_server}")
+    print(f"record: {record}")
 
 
 def my_turn_yet():

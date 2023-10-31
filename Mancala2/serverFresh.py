@@ -79,7 +79,7 @@ def threaded_client(conn, client_num, record, ip):
                 record_win(ip)
             elif data[0] == "i lost":
                 pass
-                #record_loss(ip)
+                record_loss(ip)
 
             else:
                 pass
@@ -107,7 +107,7 @@ def get_records(ipaddr):
 
         for i in file_data:
             if i[0:13] == user_ip:
-                results = str(i[-4:])
+                results = str(i[-6:])
                 user_exists = True
 
     if not user_exists:
@@ -120,44 +120,69 @@ def get_records(ipaddr):
 
 def record_loss(user_ip):
     line_count = 0
-    with open('records.txt', 'r') as f:
-        file_data = f.readlines()
-        for i in file_data:
-            if i[0:13] == user_ip:
-                break
-            else:
-                line_count += 1
+    f = open('records.txt', 'r')
+    file_data = f.readlines()
+    for i in file_data:
+        if i[0:13] == user_ip:
+            break
+        else:
+            line_count += 1
+    f.close()
 
-    with open('records.txt', 'r+') as f:
-        file_data = f.readlines()
-        file_as_list = list(file_data)
-        open('records.txt', 'w').close()
-        for i in file_as_list:
-            if i[0:13] == user_ip:
-                f.write(f"{i[0:17]}{str(int(i[17]) + 1)}{i[18]}\n")
-            else:
-                f.write(f"{i}\n")
+    f = open('records.txt', 'r+')
+    file_data = f.readlines()
+    file_as_list = list(file_data)
+    for i in file_as_list:
+        i = i.rstrip("\n")
+        print(f"i: {i}")
+
+    f.close()
+
+    z = open('records.txt', 'w').close()
+
+    f = open('records.txt', 'r+')
+
+    for i in file_as_list:
+        if i[0:13] == user_ip:
+            m = i.strip("\n")
+            test = f"{m[0:17]}{str(int(m[17]) + 1)}{m[18]}\n"
+            f.write(test)
+        else:
+            m = i.strip("\n")
+            f.write(f"{m}\n")
+    f.close()
 
 
 def record_win(user_ip):
     line_count = 0
-    with open('records.txt', 'r') as f:
-        file_data = f.readlines()
-        for i in file_data:
-            if i[0:13] == user_ip:
-                break
-            else:
-                line_count += 1
+    f = open('records.txt', 'r')
+    file_data = f.readlines()
+    for i in file_data:
+        if i[0:13] == user_ip:
+            break
+        else:
+            line_count += 1
+    f.close()
 
-    with open('records.txt', 'r+') as f:
-        file_data = f.readlines()
-        file_as_list = list(file_data)
-        open('records.txt', 'w').close()
-        for i in file_as_list:
-            if i[0:13] == user_ip:
-                f.write(f"{i[0:17]}{str(int(i[15]) + 1)}{i[16:]}\n")
-            else:
-                f.write(f"{i}\n")
+    f = open('records.txt', 'r+')
+    file_data = f.readlines()
+    file_as_list = list(file_data)
+
+    f.close()
+
+    z = open('records.txt', 'w').close()
+
+    f = open('records.txt', 'r+')
+
+    for i in file_as_list:
+        if i[0:13] == user_ip:
+            m = i.strip("\n")
+            test = f"{m[0:15]}{str(int(m[15]) + 1)}{m[16:]}\n"
+            f.write(test)
+        else:
+            m = i.strip("\n")
+            f.write(f"{m}\n")
+    f.close()
 
 
 while True:
