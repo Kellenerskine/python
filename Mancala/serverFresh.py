@@ -3,9 +3,9 @@ import socket
 from _thread import *
 
 # TODO: reset player_num
-#server = "192.168.0.106" #mbp ip
-#server = "192.168.0.146" #rpi ip
-server = "66.85.230.129" #rpi public ip
+# server = "192.168.0.106" #mbp ip
+server = "192.168.0.146" #rpi ip
+# server = "66.85.230.129" #rpi public ip
 
 port = 5001
 

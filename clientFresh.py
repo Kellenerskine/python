@@ -5,9 +5,9 @@ import pygame
 pygame.font.init()
 # pygame.mixer.init()
 
-#server = "192.168.0.106" #mbp ip
-#server = "192.168.0.146" #rpi ip
-server = "66.85.230.129" #rpi public ip
+# server = "192.168.0.106" #mbp ip
+server = "192.168.0.146" #rpi ip
+# server = "66.85.230.129" #rpi public ip
 
 port = 5001
 game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
