@@ -4,7 +4,9 @@ from _thread import *
 
 # TODO: reset player_num
 #server = "192.168.0.106" #mbp ip
-server = "192.168.0.146" #rpi ip
+#server = "192.168.0.146" #rpi ip
+server = "66.85.230.129" #rpi public ip
+
 port = 5001
 
 
@@ -93,8 +95,8 @@ def threaded_client(conn, client_num, record, ip):
     # close the connection
     # TODO: have not tested the line below
     player_number -= 1
-    # game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-    game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+    game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+    #game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
     print(f"player num {player_number}")
     conn.close()
     # TODO:reset server player num var when people DC
