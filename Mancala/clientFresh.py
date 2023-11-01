@@ -5,13 +5,14 @@ import pygame
 pygame.font.init()
 # pygame.mixer.init()
 
-server = "192.168.0.106"
+#server = "192.168.0.106" #mbp ip
+server = "192.168.0.146" #rpi ip
 port = 5001
 game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
 client_num = 0
 my_turn = True
 go_again = False
-record = "4W 4L"
+record = "0W 0L"
 
 height = 400
 width = 900
@@ -150,6 +151,10 @@ def redrawWindow(window):
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
                 send_records()
+                update_buttons()
+                for btn in btns:
+                    btn.draw(window)
+                pygame.display.update()
                 pygame.time.delay(10000)
                 pygame.quit()
             else:
@@ -157,6 +162,10 @@ def redrawWindow(window):
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
                 send_records()
+                update_buttons()
+                for btn in btns:
+                    btn.draw(window)
+                pygame.display.update()
                 pygame.time.delay(10000)
                 pygame.quit()
         elif game_winner == 2:
@@ -165,6 +174,10 @@ def redrawWindow(window):
                     (width / 2 - win_message.get_width() / 2), (height / 2 - win_message.get_height() / 2) - 150))
                 pygame.display.update()
                 send_records()
+                update_buttons()
+                for btn in btns:
+                    btn.draw(window)
+                pygame.display.update()
                 pygame.time.delay(10000)
                 pygame.quit()
             else:
@@ -172,6 +185,10 @@ def redrawWindow(window):
                     (width / 2 - lose_message.get_width() / 2), (height / 2 - lose_message.get_height() / 2) - 150))
                 pygame.display.update()
                 send_records()
+                update_buttons()
+                for btn in btns:
+                    btn.draw(window)
+                pygame.display.update()
                 pygame.time.delay(10000)
                 pygame.quit()
 
@@ -219,8 +236,6 @@ def get_game_state():
     game_state = data_from_server[0]
     client_num = data_from_server[1]
     record = str(data_from_server[3])[0:5]
-    print(f"data: {data_from_server}")
-    print(f"record: {record}")
 
 
 def my_turn_yet():
@@ -244,7 +259,6 @@ def my_turn_yet():
             game_state = turn_state[1]
             update_buttons()
             redrawWindow(screen)
-            print(f"current non-turn-client GS: {game_state}")
             my_turn = False
 
 
@@ -276,15 +290,19 @@ def check_win():
     if game_state[0] == 0 and game_state[1] == 0 and game_state[2] == 0 and game_state[3] == 0 and game_state[
         4] == 0 and game_state[5] == 0:
         for i in range(7, 13):
-            game_state[13] += game_state[i]
-            game_winner = 1
-            return True
+            game_state[6] += game_state[i]
+            if game_state[i] != 0:
+                game_state[i] = 0
+        game_winner = 1
+        return True
     elif game_state[7] == 0 and game_state[8] == 0 and game_state[9] == 0 and game_state[10] == 0 and game_state[
         11] == 0 and game_state[12] == 0:
         for i in range(0, 6):
-            game_state[6] += game_state[i]
-            game_winner = 2
-            return True
+            game_state[13] += game_state[i]
+            if game_state[i] != 0:
+                game_state[i] = 0
+        game_winner = 2
+        return True
     else:
         return False
 
@@ -356,7 +374,6 @@ def click(btn):
         updated_game_list_encoded = s.recv(1024 * 2)
         updated_game_list_reply = json.loads(updated_game_list_encoded.decode('utf-8'))
 
-        print(updated_game_list_reply)
     else:
         update_buttons()
         update_server_game_list()

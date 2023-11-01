@@ -3,15 +3,17 @@ import socket
 from _thread import *
 
 # TODO: reset player_num
-server = "192.168.0.106"
+#server = "192.168.0.106" #mbp ip
+server = "192.168.0.146" #rpi ip
 port = 5001
+
 
 game_started = False
 player_number = 1
 turn_counter = 1
 
-# game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
-game_state = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0]
+#game_state = [4, 4, 4, 4, 4, 4, 0, 4, 4, 4, 4, 4, 4, 0]
+game_state = [0, 2, 0, 2, 0, 1, 0, 0, 2, 0, 2, 0, 1, 0]
 
 # server setup
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
