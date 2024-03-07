@@ -1,3 +1,5 @@
+#doesnt work, website has changed formatting (tracker.gg)
+
 import requests
 import math
 from PySide6.QtWidgets import *
